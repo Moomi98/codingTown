@@ -1,9 +1,14 @@
 import { createGlobalStyle } from "styled-components";
 
 export const GlobalStyle = createGlobalStyle`
-  html, body {
+*{
     box-sizing: border-box;
+
+}
+  html, body {
     height: 100%;
+      padding: 0;
+  margin: 0;
   }
   .div{
     height: 100%;
