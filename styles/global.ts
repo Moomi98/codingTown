@@ -5,7 +5,7 @@ export const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
     height: 100%;
   }
-  div{
+  .div{
     height: 100%;
   }
   #__next{

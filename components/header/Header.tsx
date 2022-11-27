@@ -14,6 +14,7 @@ const HeaderLayout = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 90%;
+  height: 100%;
   margin: 0 auto;
 `;
 
