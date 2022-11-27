@@ -1,7 +1,12 @@
 import Header from "../components/header/Header";
-
-const Lobby = (): JSX.Element => {
-  return <Header />;
+import Lobby from "../components/lobby/Lobby";
+const lobby = (): JSX.Element => {
+  return (
+    <div className="div">
+      <Header />
+      <Lobby />
+    </div>
+  );
 };
 
-export default Lobby;
+export default lobby;
