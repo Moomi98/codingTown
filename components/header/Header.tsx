@@ -6,6 +6,7 @@ const Container = styled.header`
   width: 100%;
   height: 70px;
   z-index: 10;
+  background-color: white;
   box-shadow: rgb(4 17 29 / 25%) 0px 0px 8px 0px;
 `;
 

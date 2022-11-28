@@ -1,9 +1,16 @@
 import { useEffect, useRef } from "react";
 import { loadDesktopCapture } from "../../utils/channel/channel";
 import styled from "styled-components";
-const VideoContainer = styled.video`
+
+const Container = styled.div`
   width: 100%;
   height: 100%;
+`;
+
+const VideoPlayer = styled.video`
+  display: block;
+  margin: 0 auto;
+  width: 100%;
   background-color: gray;
 `;
 
@@ -19,7 +26,11 @@ const Video = () => {
   useEffect(() => {
     setDesktopVideo();
   }, []);
-  return <VideoContainer ref={videoRef} autoPlay></VideoContainer>;
+  return (
+    <Container>
+      <VideoPlayer ref={videoRef} autoPlay></VideoPlayer>
+    </Container>
+  );
 };
 
 export default Video;

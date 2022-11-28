@@ -1,7 +1,13 @@
-import Video from "../components/channel/Video";
+import Channel from "../components/channel/Channel";
+import Header from "../components/header/Header";
 
-const Channel = () => {
-  return <Video />;
+const channel = () => {
+  return (
+    <div className="div">
+      <Header />
+      <Channel />
+    </div>
+  );
 };
 
-export default Channel;
+export default channel;

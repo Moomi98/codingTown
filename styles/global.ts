@@ -16,11 +16,7 @@ export const GlobalStyle = createGlobalStyle`
   #__next{
     height: 100%;
   }
-  *,
-  *::before,
-  *::after {
-    box-sizing: inherit;
-  }
+
   * { font-family: 'Spoqa Han Sans', 'Spoqa Han Sans JP', 'Sans-serif';}
   a { cursor: pointer; text-decoration: none; }
 `;

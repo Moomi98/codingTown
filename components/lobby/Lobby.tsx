@@ -27,6 +27,14 @@ const Lobby = () => {
       <RoomDoor title="Hello" />
       <RoomDoor title="Hello" />
       <RoomDoor title="Hello" />
+      <RoomDoor title="Hello" />
+      <RoomDoor title="Hello" />
+      <RoomDoor title="Hello" />
+      <RoomDoor title="Hello" />
+      <RoomDoor title="Hello" />
+      <RoomDoor title="Hello" />
+      <RoomDoor title="Hello" />
+      <RoomDoor title="Hello" />
     </Container>
   );
 };
