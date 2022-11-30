@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import { FaCode } from "react-icons/fa";
 import { mainColor, mainColorHover } from "../../styles/variables";
+import { useState } from "react";
+import Modal from "../modal/CreateRoomModal";
 
 const Container = styled.header`
   position: fixed;
@@ -54,6 +56,8 @@ const CreateRoomButton = styled.button`
 `;
 
 const Header = (): JSX.Element => {
+  const [createRoomModal, setCreateRoomModal] = useState(false);
+
   return (
     <Container>
       <HeaderLayout>
@@ -61,8 +65,11 @@ const Header = (): JSX.Element => {
           <FaCode size={30} />
           <LogoName>Coding Town</LogoName>
         </LogoLayout>
-        <CreateRoomButton>방 생성</CreateRoomButton>
+        <CreateRoomButton onClick={() => setCreateRoomModal(true)}>
+          방 생성
+        </CreateRoomButton>
       </HeaderLayout>
+      {createRoomModal && <Modal close={() => setCreateRoomModal(false)} />}
     </Container>
   );
 };
