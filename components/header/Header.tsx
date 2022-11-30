@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { FaCode } from "react-icons/fa";
+import { mainColor, mainColorHover } from "../../styles/variables";
 
 const Container = styled.header`
   position: fixed;
@@ -35,6 +36,23 @@ const LogoName = styled.p`
   align-items: center;
 `;
 
+const CreateRoomButton = styled.button`
+  border: none;
+  background-color: ${mainColor};
+  color: white;
+  font-size: 20px;
+  font-weight: 500;
+  padding: 10px 30px;
+  border-radius: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: ${mainColorHover};
+  }
+`;
+
 const Header = (): JSX.Element => {
   return (
     <Container>
@@ -43,6 +61,7 @@ const Header = (): JSX.Element => {
           <FaCode size={30} />
           <LogoName>Coding Town</LogoName>
         </LogoLayout>
+        <CreateRoomButton>방 생성</CreateRoomButton>
       </HeaderLayout>
     </Container>
   );

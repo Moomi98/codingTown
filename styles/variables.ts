@@ -1,5 +1,2 @@
-import { css } from "styled-components";
-
-const mainColor = css`
-  color: #2d8cff;
-`;
+export const mainColor = "#2d8cff";
+export const mainColorHover = "#277be0";
