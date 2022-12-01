@@ -4,6 +4,8 @@ import { useEffect } from "react";
 import TextField from "../common/TextField";
 import Toggle from "../common/Toggle";
 import { mainColor, mainColorHover } from "../../styles/variables";
+import { useRouter } from "next/router";
+
 interface animationProps {
   animation: boolean;
 }
@@ -49,24 +51,6 @@ const scaleBack = keyframes`
 		transform: scale(.8) translateY(1000px);
 		opacity: 0;
 	}
-`;
-
-const openSlideRightToLeft = keyframes`
-  0%{
-    width: 0;
-  }
-  100%{
-    width: 100%;
-  }
-`;
-
-const closeSlideRightToLeft = keyframes`
-  0%{
-    width: 100%;
-  }
-  100%{
-    width: 0;
-  }
 `;
 
 const Container = styled.div<animationProps>`
@@ -126,11 +110,6 @@ const Title = styled.h2`
   font-size: 32px;
 `;
 
-const Subtitle = styled.h4`
-  font-weight: 600;
-  color: #888;
-`;
-
 const InputTypeLayout = styled.div`
   width: 100%;
   display: flex;
@@ -178,14 +157,33 @@ const Modal = (props: ModalProps) => {
   const [closeAnimation, setCloseAnimation] = useState(false);
   const [privateRoom, setPrivateRoom] = useState(false);
   const passwordRef = useRef<HTMLInputElement>(null);
+  const roomNameRef = useRef<HTMLInputElement>(null);
+  const nickNameRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
+
+  const getFormData = () => {
+    if (!roomNameRef.current) return;
+    if (!passwordRef.current) return;
+    if (!nickNameRef.current) return;
+    const roomName = roomNameRef.current.value;
+    const nickName = nickNameRef.current.value;
+    let password = "";
+    if (privateRoom) {
+      password = passwordRef.current.value;
+    }
+
+    router.push("/channel");
+  };
+
+  const createRoom = () => {
+    getFormData();
+  };
 
   const setPassword = () => {
     if (privateRoom) {
       setPrivateRoom(false);
-      console.log(passwordRef);
       if (passwordRef.current) {
         passwordRef.current.value = "";
-        console.log(passwordRef.current.value);
       }
     } else {
       setPrivateRoom(true);
@@ -216,11 +214,11 @@ const Modal = (props: ModalProps) => {
         <FormLayout>
           <InputTypeLayout>
             <InputType>방 제목</InputType>
-            <TextField />
+            <TextField ref={roomNameRef} />
           </InputTypeLayout>
           <InputTypeLayout>
             <InputType>닉네임</InputType>
-            <TextField />
+            <TextField ref={nickNameRef} />
           </InputTypeLayout>
           <InputTypeLayout>
             <InputType>비밀번호</InputType>
@@ -230,7 +228,7 @@ const Modal = (props: ModalProps) => {
             </FlexLayout>
           </InputTypeLayout>
         </FormLayout>
-        <CreateRoomButton>생성하기</CreateRoomButton>
+        <CreateRoomButton onClick={createRoom}>생성하기</CreateRoomButton>
       </ProjectDetailLayout>
     </Container>
   );
