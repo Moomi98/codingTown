@@ -3,6 +3,7 @@ import { FaCode } from "react-icons/fa";
 import { mainColor, mainColorHover } from "../../styles/variables";
 import { useState } from "react";
 import Modal from "../modal/CreateRoomModal";
+import { useRouter } from "next/router";
 
 const Container = styled.header`
   position: fixed;
@@ -57,11 +58,16 @@ const CreateRoomButton = styled.button`
 
 const Header = (): JSX.Element => {
   const [createRoomModal, setCreateRoomModal] = useState(false);
+  const router = useRouter();
+
+  const routeLobby = () => {
+    router.push("/lobby");
+  };
 
   return (
     <Container>
       <HeaderLayout>
-        <LogoLayout>
+        <LogoLayout onClick={routeLobby}>
           <FaCode size={30} />
           <LogoName>Coding Town</LogoName>
         </LogoLayout>
