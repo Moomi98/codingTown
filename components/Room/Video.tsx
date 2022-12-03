@@ -4,14 +4,18 @@ import styled from "styled-components";
 
 const Container = styled.div`
   width: 100%;
-  height: 100%;
+  height: 90%;
+  position: relative;
 `;
 
 const VideoPlayer = styled.video`
+  position: absolute;
   display: block;
   margin: 0 auto;
   width: 100%;
+  height: 100%;
   background-color: gray;
+  object-fit: fill;
 `;
 
 const Video = () => {
@@ -26,6 +30,7 @@ const Video = () => {
   useEffect(() => {
     setDesktopVideo();
   }, []);
+
   return (
     <Container>
       <VideoPlayer ref={videoRef} autoPlay></VideoPlayer>

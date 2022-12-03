@@ -8,11 +8,11 @@ import { useEffect } from "react";
 
 const Container = styled.div`
   width: 100%;
-  height: calc(100% - 70px);
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
   margin: 0 auto;
   position: relative;
-  top: 70px;
-  padding-top: 30px;
 `;
 
 const Channel = (): JSX.Element => {
