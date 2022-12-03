@@ -5,6 +5,7 @@ import TextField from "../common/TextField";
 import Toggle from "../common/Toggle";
 import { mainColor, mainColorHover } from "../../styles/variables";
 import { useRouter } from "next/router";
+import { paths } from "../../constants/paths";
 
 interface animationProps {
   animation: boolean;
@@ -172,7 +173,7 @@ const Modal = (props: ModalProps) => {
       password = passwordRef.current.value;
     }
 
-    router.push("/channel");
+    router.push(paths.ROOM);
   };
 
   const createRoom = () => {

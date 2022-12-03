@@ -1,5 +1,5 @@
-import Channel from "../components/channel/Channel";
-import Header from "../components/header/Header";
+import Channel from "../../components/channel/Channel";
+import Header from "../../components/header/Header";
 
 const channel = () => {
   return (
