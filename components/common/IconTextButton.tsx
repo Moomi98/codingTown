@@ -13,12 +13,14 @@ const Container = styled.button`
   align-items: center;
   background-color: transparent;
   border: none;
+  cursor: pointer;
 `;
 const Content = styled.p`
   font-size: 12px;
   font-weight: 500;
   color: white;
   text-align: center;
+  margin-bottom: 0;
 `;
 const IconTextButton = (props: iconTextButtonProps) => {
   return (
