@@ -6,6 +6,8 @@ import { BsFillMicFill, BsFillMicMuteFill } from "react-icons/bs";
 import { videoMenu } from "../../constants/menus";
 import { useState } from "react";
 import { colors } from "../../styles/variables";
+import { useRouter } from "next/router";
+import { paths } from "../../constants/paths";
 
 const Container = styled.div`
   position: relative;
@@ -43,6 +45,12 @@ const LeaveRoomButton = styled.button`
 
 const Menu = () => {
   const [mic, setMic] = useState(false);
+  const router = useRouter();
+
+  const routeLobby = () => {
+    router.push(paths.LOBBY);
+  };
+
   return (
     <Container>
       <MenuContainer>
@@ -69,7 +77,9 @@ const Menu = () => {
         icon={<FaChalkboardTeacher size={35} color="white" />}
         content={videoMenu.WHITE_BOARD}
       />
-      <LeaveRoomButton>{videoMenu.LEAVE_ROOM}</LeaveRoomButton>
+      <LeaveRoomButton onClick={routeLobby}>
+        {videoMenu.LEAVE_ROOM}
+      </LeaveRoomButton>
     </Container>
   );
 };
