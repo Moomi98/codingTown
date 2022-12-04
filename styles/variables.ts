@@ -1,3 +1,6 @@
-export const mainColor = "#2d8cff";
-export const mainColorHover = "#277be0";
-export const disabledColor = "#bbb";
+export const colors = {
+  main: "#2d8cff",
+  mainHover: "#277be0",
+  disabled: "#bbb",
+  green: "#35ff35",
+};

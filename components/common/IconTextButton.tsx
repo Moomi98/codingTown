@@ -1,9 +1,10 @@
 import styled from "styled-components";
-import { ReactNode } from "react";
+import { MouseEventHandler, ReactNode } from "react";
 
 interface iconTextButtonProps {
   icon: ReactNode;
   content: string;
+  click?: MouseEventHandler<HTMLButtonElement>;
 }
 
 const Container = styled.button`
@@ -24,7 +25,7 @@ const Content = styled.p`
 `;
 const IconTextButton = (props: iconTextButtonProps) => {
   return (
-    <Container>
+    <Container onClick={props.click}>
       {props.icon}
       <Content>{props.content}</Content>
     </Container>

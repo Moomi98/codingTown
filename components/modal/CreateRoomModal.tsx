@@ -3,7 +3,7 @@ import React, { useRef, useState } from "react";
 import { useEffect } from "react";
 import TextField from "../common/TextField";
 import Toggle from "../common/Toggle";
-import { mainColor, mainColorHover } from "../../styles/variables";
+import { colors } from "../../styles/variables";
 import { useRouter } from "next/router";
 import { paths } from "../../constants/paths";
 
@@ -139,7 +139,7 @@ const FlexLayout = styled.div`
 
 const CreateRoomButton = styled.button`
   border: none;
-  background-color: ${mainColor};
+  background-color: ${colors.main};
   color: white;
   font-size: 20px;
   font-weight: 500;
@@ -150,7 +150,7 @@ const CreateRoomButton = styled.button`
   transition: all 0.2s;
 
   &:hover {
-    background-color: ${mainColorHover};
+    background-color: ${colors.mainHover};
   }
 `;
 
@@ -173,7 +173,7 @@ const Modal = (props: ModalProps) => {
       password = passwordRef.current.value;
     }
 
-    router.push(paths.ROOM);
+    router.push(paths.ROOM + "/111");
   };
 
   const createRoom = () => {

@@ -2,7 +2,10 @@ import styled from "styled-components";
 import IconTextButton from "../common/IconTextButton";
 import { AiFillSetting } from "react-icons/ai";
 import { FaChalkboardTeacher } from "react-icons/fa";
+import { BsFillMicFill, BsFillMicMuteFill } from "react-icons/bs";
 import { videoMenu } from "../../constants/menus";
+import { useState } from "react";
+import { colors } from "../../styles/variables";
 
 const Container = styled.div`
   position: relative;
@@ -14,6 +17,12 @@ const Container = styled.div`
   gap: 10px;
   background-color: black;
   padding: 20px 30px;
+`;
+
+const MenuContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 15px;
 `;
 
 const LeaveRoomButton = styled.button`
@@ -33,12 +42,29 @@ const LeaveRoomButton = styled.button`
 `;
 
 const Menu = () => {
+  const [mic, setMic] = useState(false);
   return (
     <Container>
-      <IconTextButton
-        icon={<AiFillSetting size={35} color="white" />}
-        content={videoMenu.SETTING}
-      />
+      <MenuContainer>
+        <IconTextButton
+          icon={<AiFillSetting size={35} color="white" />}
+          content={videoMenu.SETTING}
+        />
+        {mic ? (
+          <IconTextButton
+            icon={<BsFillMicFill size={35} color={colors.green} />}
+            content={videoMenu.MIC_ON}
+            click={() => setMic((prevState) => (prevState = !prevState))}
+          />
+        ) : (
+          <IconTextButton
+            icon={<BsFillMicMuteFill size={35} color="white" />}
+            content={videoMenu.MIC_OFF}
+            click={() => setMic((prevState) => (prevState = !prevState))}
+          />
+        )}
+      </MenuContainer>
+
       <IconTextButton
         icon={<FaChalkboardTeacher size={35} color="white" />}
         content={videoMenu.WHITE_BOARD}
