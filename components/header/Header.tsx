@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { FaCode } from "react-icons/fa";
-import { mainColor, mainColorHover } from "../../styles/variables";
+import { colors } from "../../styles/variables";
 import { useState } from "react";
 import Modal from "../modal/CreateRoomModal";
 import { useRouter } from "next/router";
@@ -41,7 +41,7 @@ const LogoName = styled.p`
 
 const CreateRoomButton = styled.button`
   border: none;
-  background-color: ${mainColor};
+  background-color: ${colors.main};
   color: white;
   font-size: 20px;
   font-weight: 500;
@@ -52,7 +52,7 @@ const CreateRoomButton = styled.button`
   transition: all 0.2s;
 
   &:hover {
-    background-color: ${mainColorHover};
+    background-color: ${colors.mainHover};
   }
 `;
 

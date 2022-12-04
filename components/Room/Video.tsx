@@ -20,7 +20,6 @@ const VideoPlayer = styled.video`
 
 const Video = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
-
   const setDesktopVideo = async () => {
     if (!videoRef.current) return;
     const stream = await loadDesktopCapture();

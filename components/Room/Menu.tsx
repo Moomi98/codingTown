@@ -4,10 +4,11 @@ import { AiFillSetting } from "react-icons/ai";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { BsFillMicFill, BsFillMicMuteFill } from "react-icons/bs";
 import { videoMenu } from "../../constants/menus";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { colors } from "../../styles/variables";
 import { useRouter } from "next/router";
 import { paths } from "../../constants/paths";
+import { loadMicStream } from "../../utils/channel/channel";
 
 const Container = styled.div`
   position: relative;
@@ -44,12 +45,31 @@ const LeaveRoomButton = styled.button`
 `;
 
 const Menu = () => {
-  const [mic, setMic] = useState(false);
+  const [isMicOn, setIsMicOn] = useState(true);
+  const [micStream, setMicStream] = useState<MediaStream | null>(null);
   const router = useRouter();
 
   const routeLobby = () => {
     router.push(paths.LOBBY);
   };
+
+  const getMicStream = async () => {
+    setMicStream(await loadMicStream());
+  };
+
+  const setMic = () => {
+    const audioTracks = micStream!.getAudioTracks();
+    console.log(audioTracks);
+
+    setIsMicOn((state) => (state = !state));
+    audioTracks.forEach(
+      (audioTrack) => (audioTrack.enabled = !audioTrack.enabled)
+    );
+  };
+
+  useEffect(() => {
+    getMicStream();
+  }, []);
 
   return (
     <Container>
@@ -58,17 +78,17 @@ const Menu = () => {
           icon={<AiFillSetting size={35} color="white" />}
           content={videoMenu.SETTING}
         />
-        {mic ? (
+        {isMicOn ? (
           <IconTextButton
             icon={<BsFillMicFill size={35} color={colors.green} />}
             content={videoMenu.MIC_ON}
-            click={() => setMic((prevState) => (prevState = !prevState))}
+            click={setMic}
           />
         ) : (
           <IconTextButton
             icon={<BsFillMicMuteFill size={35} color="white" />}
             content={videoMenu.MIC_OFF}
-            click={() => setMic((prevState) => (prevState = !prevState))}
+            click={setMic}
           />
         )}
       </MenuContainer>
