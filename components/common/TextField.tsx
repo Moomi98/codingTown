@@ -1,10 +1,11 @@
-import { forwardRef } from "react";
+import { ChangeEventHandler, forwardRef } from "react";
 import styled from "styled-components";
-import { mainColor, disabledColor } from "../../styles/variables";
+import { colors } from "../../styles/variables";
 
 interface textFieldProps {
   disabled?: boolean;
   ref?: React.RefObject<HTMLInputElement>;
+  change?: ChangeEventHandler;
 }
 
 const Container = styled.input`
@@ -13,11 +14,11 @@ const Container = styled.input`
   padding: 8px 5px;
   font-size: 18px;
   border-radius: 5px;
-  border: 2px solid ${disabledColor};
+  border: 2px solid ${colors.disabled};
   outline: none;
   transition: all 0.2s;
   &:focus {
-    border: 2px solid ${mainColor};
+    border: 2px solid ${colors.main};
   }
   &:disabled {
     background-color: #eee;
@@ -25,7 +26,9 @@ const Container = styled.input`
 `;
 
 const TextField = forwardRef<HTMLInputElement, textFieldProps>((props, ref) => {
-  return <Container ref={ref} disabled={props.disabled} />;
+  return (
+    <Container ref={ref} disabled={props.disabled} onChange={props.change} />
+  );
 });
 
 export default TextField;

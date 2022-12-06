@@ -1,11 +1,12 @@
 import styled, { css, keyframes } from "styled-components";
-import React, { useRef, useState } from "react";
+import React, { ChangeEvent, useRef, useState } from "react";
 import { useEffect } from "react";
 import TextField from "../common/TextField";
 import Toggle from "../common/Toggle";
 import { colors } from "../../styles/variables";
 import { useRouter } from "next/router";
 import { paths } from "../../constants/paths";
+import useEscEvent from "../../hooks/useEscEvent";
 
 interface animationProps {
   animation: boolean;
@@ -152,6 +153,10 @@ const CreateRoomButton = styled.button`
   &:hover {
     background-color: ${colors.mainHover};
   }
+  &:disabled {
+    background-color: ${colors.disabled};
+    cursor: not-allowed;
+  }
 `;
 
 const Modal = (props: ModalProps) => {
@@ -160,12 +165,15 @@ const Modal = (props: ModalProps) => {
   const passwordRef = useRef<HTMLInputElement>(null);
   const roomNameRef = useRef<HTMLInputElement>(null);
   const nickNameRef = useRef<HTMLInputElement>(null);
+  const createButtonRef = useRef<HTMLButtonElement>(null);
   const router = useRouter();
+  const [createButton, setCreateButton] = useState(true);
+  const escEvent = useEscEvent(() => setCloseAnimation(true));
 
   const getFormData = () => {
-    if (!roomNameRef.current) return;
-    if (!passwordRef.current) return;
-    if (!nickNameRef.current) return;
+    if (!roomNameRef.current) return false;
+    if (!passwordRef.current) return false;
+    if (!nickNameRef.current) return false;
     const roomName = roomNameRef.current.value;
     const nickName = nickNameRef.current.value;
     let password = "";
@@ -173,11 +181,18 @@ const Modal = (props: ModalProps) => {
       password = passwordRef.current.value;
     }
 
-    router.push(paths.ROOM + "/111");
+    return {
+      roomName,
+      nickName,
+      password,
+    };
   };
 
   const createRoom = () => {
-    getFormData();
+    const roomData = getFormData();
+    if (!roomData) return;
+
+    router.push(paths.ROOM + `/${roomData.roomName}`);
   };
 
   const setPassword = () => {
@@ -197,16 +212,16 @@ const Modal = (props: ModalProps) => {
     }
   }, [closeAnimation]);
 
-  useEffect(() => {
-    const closeModal = (event: KeyboardEvent) => {
-      if (event.keyCode === 27) {
-        setCloseAnimation(true);
-      }
-    };
-    window.addEventListener("keydown", closeModal);
-
-    return () => window.removeEventListener("keydown", closeModal);
-  }, []);
+  const canCreateRoom = () => {
+    if (
+      roomNameRef.current?.value.length === 0 ||
+      nickNameRef.current?.value.length === 0
+    ) {
+      setCreateButton(true);
+    } else {
+      setCreateButton(false);
+    }
+  };
 
   return (
     <Container animation={closeAnimation}>
@@ -215,11 +230,11 @@ const Modal = (props: ModalProps) => {
         <FormLayout>
           <InputTypeLayout>
             <InputType>방 제목</InputType>
-            <TextField ref={roomNameRef} />
+            <TextField ref={roomNameRef} change={canCreateRoom} />
           </InputTypeLayout>
           <InputTypeLayout>
             <InputType>닉네임</InputType>
-            <TextField ref={nickNameRef} />
+            <TextField ref={nickNameRef} change={canCreateRoom} />
           </InputTypeLayout>
           <InputTypeLayout>
             <InputType>비밀번호</InputType>
@@ -229,7 +244,13 @@ const Modal = (props: ModalProps) => {
             </FlexLayout>
           </InputTypeLayout>
         </FormLayout>
-        <CreateRoomButton onClick={createRoom}>생성하기</CreateRoomButton>
+        <CreateRoomButton
+          ref={createButtonRef}
+          onClick={createRoom}
+          disabled={createButton}
+        >
+          생성하기
+        </CreateRoomButton>
       </ProjectDetailLayout>
     </Container>
   );
