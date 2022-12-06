@@ -3,6 +3,9 @@ import useCloseAnimation from "../../hooks/useCloseAnimation";
 import useEscEvent from "../../hooks/useEscEvent";
 import { colors } from "../../styles/variables";
 import { BsFillMicFill, BsHeadphones } from "react-icons/bs";
+import { useState } from "react";
+import MicSetting from "./MicSetting";
+import SpeakerSetting from "./SpeakerSetting";
 
 interface animationProps {
   animation: boolean;
@@ -158,23 +161,30 @@ const FlexLayout = styled.div`
 `;
 
 export const Setting = (props: SettingProps) => {
+  const settingPages: any = {
+    mic: <MicSetting />,
+    speaker: <SpeakerSetting />,
+  };
+
   const [closeAnimation, setCloseAnimation] = useCloseAnimation(() =>
     props.close()
   );
   const escEvent = useEscEvent(() => setCloseAnimation(true));
+  const [currentSettingPage, setCurrentSettingPage] = useState<string>("mic");
   return (
     <Background animation={closeAnimation}>
       <Container animation={closeAnimation}>
         <SettingMenuList>
-          <SettingMenu>
+          <SettingMenu onClick={() => setCurrentSettingPage("mic")}>
             <BsFillMicFill size={25} color={colors.green} />
             <Title>마이크</Title>
           </SettingMenu>
-          <SettingMenu>
+          <SettingMenu onClick={() => setCurrentSettingPage("speaker")}>
             <BsHeadphones size={25} color={colors.lightBlue} />
             <Title>스피커</Title>
           </SettingMenu>
         </SettingMenuList>
+        {settingPages[currentSettingPage]}
       </Container>
     </Background>
   );
