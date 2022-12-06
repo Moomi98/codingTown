@@ -1,12 +1,12 @@
 import styled, { css, keyframes } from "styled-components";
-import React, { ChangeEvent, useRef, useState } from "react";
-import { useEffect } from "react";
+import React, { useRef, useState } from "react";
 import TextField from "../common/TextField";
 import Toggle from "../common/Toggle";
 import { colors } from "../../styles/variables";
 import { useRouter } from "next/router";
 import { paths } from "../../constants/paths";
 import useEscEvent from "../../hooks/useEscEvent";
+import useCloseAnimation from "../../hooks/useCloseAnimation";
 
 interface animationProps {
   animation: boolean;
@@ -160,7 +160,9 @@ const CreateRoomButton = styled.button`
 `;
 
 const Modal = (props: ModalProps) => {
-  const [closeAnimation, setCloseAnimation] = useState(false);
+  const [closeAnimation, setCloseAnimation] = useCloseAnimation(() =>
+    props.close()
+  );
   const [privateRoom, setPrivateRoom] = useState(false);
   const passwordRef = useRef<HTMLInputElement>(null);
   const roomNameRef = useRef<HTMLInputElement>(null);
@@ -205,12 +207,6 @@ const Modal = (props: ModalProps) => {
       setPrivateRoom(true);
     }
   };
-
-  useEffect(() => {
-    if (closeAnimation) {
-      setTimeout(() => props.close(), 500);
-    }
-  }, [closeAnimation]);
 
   const canCreateRoom = () => {
     if (
