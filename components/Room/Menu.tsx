@@ -9,6 +9,7 @@ import { colors } from "../../styles/variables";
 import { useRouter } from "next/router";
 import { paths } from "../../constants/paths";
 import { loadMicStream } from "../../utils/channel/channel";
+import Setting from "../setting/Setting";
 
 const Container = styled.div`
   position: relative;
@@ -47,10 +48,15 @@ const LeaveRoomButton = styled.button`
 const Menu = () => {
   const [isMicOn, setIsMicOn] = useState(true);
   const [micStream, setMicStream] = useState<MediaStream | null>(null);
+  const [settingModal, setSettingModal] = useState(false);
   const router = useRouter();
 
   const routeLobby = () => {
     router.push(paths.LOBBY);
+  };
+
+  const closeSettingModal = () => {
+    setSettingModal(false);
   };
 
   const getMicStream = async () => {
@@ -75,12 +81,13 @@ const Menu = () => {
     <Container>
       <MenuContainer>
         <IconTextButton
+          click={() => setSettingModal(true)}
           icon={<AiFillSetting size={35} color="white" />}
           content={videoMenu.SETTING}
         />
         {isMicOn ? (
           <IconTextButton
-            icon={<BsFillMicFill size={35} color={colors.green} />}
+            icon={<BsFillMicFill size={35} color={colors.lightGreen} />}
             content={videoMenu.MIC_ON}
             click={setMic}
           />
@@ -100,6 +107,7 @@ const Menu = () => {
       <LeaveRoomButton onClick={routeLobby}>
         {videoMenu.LEAVE_ROOM}
       </LeaveRoomButton>
+      {settingModal && <Setting close={closeSettingModal} />}
     </Container>
   );
 };
