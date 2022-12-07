@@ -5,7 +5,7 @@ export const desktopStreamState = atom<MediaStream | null>({
   default: null,
 });
 
-export const mediaStreamState = atom<MediaDeviceInfo[] | null>({
+export const mediaStreamState = atom<MediaStream | null>({
   key: "mediaStream",
   default: null,
 });

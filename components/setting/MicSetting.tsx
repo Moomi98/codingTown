@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { desktopStreamState, mediaStreamState } from "../../stores/stream";
-import { getDevices } from "../../utils/channel/channel";
+import { getDevices, getUserMedia } from "../../utils/channel/channel";
 
 const Container = styled.div`
   width: 100%;
@@ -31,12 +31,19 @@ const MicSelect = styled.select`
 `;
 const MicSetting = () => {
   const [mics, setMics] = useState<MediaDeviceInfo[]>([]);
+  const [_, setMediaStream] = useRecoilState(mediaStreamState);
+
   const setMicDevices = async () => {
     const devices = await getDevices();
     const micOptions = devices?.filter(
       (device) => device.kind === "audioinput"
     );
     setMics([...micOptions]);
+  };
+
+  const changeMic = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const micId = e.target.selectedOptions[0].value;
+    setMediaStream(await getUserMedia(micId));
   };
 
   useEffect(() => {
@@ -47,7 +54,7 @@ const MicSetting = () => {
     <Container>
       <SettingContainer>
         <Title>마이크 선택</Title>
-        <MicSelect>
+        <MicSelect onChange={changeMic}>
           {mics?.map((mic) => (
             <option key={mic.deviceId} value={mic.deviceId}>
               {mic.label}

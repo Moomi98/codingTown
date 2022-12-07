@@ -1,5 +1,9 @@
 import { useEffect, useRef } from "react";
-import { loadDesktopCapture, getDevices } from "../../utils/channel/channel";
+import {
+  loadDesktopCapture,
+  getDevices,
+  getUserMedia,
+} from "../../utils/channel/channel";
 import styled from "styled-components";
 import { useRecoilState } from "recoil";
 import { desktopStreamState, mediaStreamState } from "../../stores/stream";
@@ -27,7 +31,7 @@ const Video = () => {
   const setDesktopVideo = async () => {
     if (!videoRef.current) return;
     const desktopStream = await loadDesktopCapture();
-    const mediaStream = await getDevices();
+    const mediaStream = await getUserMedia();
     setDesktopStream(desktopStream);
     setMediaStream(mediaStream);
     videoRef.current.srcObject = desktopStream || null;

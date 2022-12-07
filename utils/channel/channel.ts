@@ -11,7 +11,7 @@ export const loadDesktopCapture = async (): Promise<MediaStream> => {
   }
 };
 
-export const getDevices = async () => {
+export const getDevices = async (): Promise<MediaDeviceInfo[]> => {
   try {
     const stream = await navigator.mediaDevices.enumerateDevices();
 
@@ -21,7 +21,7 @@ export const getDevices = async () => {
   }
 };
 
-export const getUserMedia = async (deviceId: string) => {
+export const getUserMedia = async (deviceId?: string): Promise<MediaStream> => {
   const constraint = deviceId ? { deviceId } : true;
   try {
     const stream = await navigator.mediaDevices.getUserMedia({
