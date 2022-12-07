@@ -11,10 +11,21 @@ export const loadDesktopCapture = async (): Promise<MediaStream> => {
   }
 };
 
-export const loadMicStream = async () => {
+export const getDevices = async () => {
+  try {
+    const stream = await navigator.mediaDevices.enumerateDevices();
+
+    return stream;
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
+
+export const getUserMedia = async (deviceId: string) => {
+  const constraint = deviceId ? { deviceId } : true;
   try {
     const stream = await navigator.mediaDevices.getUserMedia({
-      audio: true,
+      audio: constraint,
     });
 
     return stream;

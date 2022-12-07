@@ -8,13 +8,13 @@ import { useEffect, useState } from "react";
 import { colors } from "../../styles/variables";
 import { useRouter } from "next/router";
 import { paths } from "../../constants/paths";
-import { loadMicStream } from "../../utils/channel/channel";
+import { getDevices } from "../../utils/channel/channel";
 import Setting from "../setting/Setting";
 
 const Container = styled.div`
   position: relative;
   width: 100%;
-  height: 10%;
+  height: 8%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -47,10 +47,10 @@ const LeaveRoomButton = styled.button`
 
 const Menu = () => {
   const [isMicOn, setIsMicOn] = useState(true);
-  const [micStream, setMicStream] = useState<MediaStream | null>(null);
+  const [micStream, setMicStream] = useState<MediaDeviceInfo[] | null>(null);
   const [settingModal, setSettingModal] = useState(false);
   const router = useRouter();
-
+  const iconSize = 30;
   const routeLobby = () => {
     router.push(paths.LOBBY);
   };
@@ -60,17 +60,16 @@ const Menu = () => {
   };
 
   const getMicStream = async () => {
-    setMicStream(await loadMicStream());
+    setMicStream(await getDevices());
   };
 
   const setMic = () => {
-    const audioTracks = micStream!.getAudioTracks();
-    console.log(audioTracks);
-
-    setIsMicOn((state) => (state = !state));
-    audioTracks.forEach(
-      (audioTrack) => (audioTrack.enabled = !audioTrack.enabled)
-    );
+    // const audioTracks = micStream!.getAudioTracks();
+    // console.log(audioTracks);
+    // setIsMicOn((state) => (state = !state));
+    // audioTracks.forEach(
+    //   (audioTrack) => (audioTrack.enabled = !audioTrack.enabled)
+    // );
   };
 
   useEffect(() => {
@@ -82,18 +81,18 @@ const Menu = () => {
       <MenuContainer>
         <IconTextButton
           click={() => setSettingModal(true)}
-          icon={<AiFillSetting size={35} color="white" />}
+          icon={<AiFillSetting size={iconSize} color="white" />}
           content={videoMenu.SETTING}
         />
         {isMicOn ? (
           <IconTextButton
-            icon={<BsFillMicFill size={35} color={colors.lightGreen} />}
+            icon={<BsFillMicFill size={iconSize} color={colors.lightGreen} />}
             content={videoMenu.MIC_ON}
             click={setMic}
           />
         ) : (
           <IconTextButton
-            icon={<BsFillMicMuteFill size={35} color="white" />}
+            icon={<BsFillMicMuteFill size={iconSize} color="white" />}
             content={videoMenu.MIC_OFF}
             click={setMic}
           />
@@ -101,7 +100,7 @@ const Menu = () => {
       </MenuContainer>
 
       <IconTextButton
-        icon={<FaChalkboardTeacher size={35} color="white" />}
+        icon={<FaChalkboardTeacher size={iconSize} color="white" />}
         content={videoMenu.WHITE_BOARD}
       />
       <LeaveRoomButton onClick={routeLobby}>

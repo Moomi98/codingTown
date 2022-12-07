@@ -1,10 +1,12 @@
 import { useEffect, useRef } from "react";
-import { loadDesktopCapture } from "../../utils/channel/channel";
+import { loadDesktopCapture, getDevices } from "../../utils/channel/channel";
 import styled from "styled-components";
+import { useRecoilState } from "recoil";
+import { desktopStreamState, mediaStreamState } from "../../stores/stream";
 
 const Container = styled.div`
   width: 100%;
-  height: 90%;
+  height: 92%;
   position: relative;
 `;
 
@@ -19,11 +21,16 @@ const VideoPlayer = styled.video`
 `;
 
 const Video = () => {
+  const [_, setDesktopStream] = useRecoilState(desktopStreamState);
+  const [__, setMediaStream] = useRecoilState(mediaStreamState);
   const videoRef = useRef<HTMLVideoElement>(null);
   const setDesktopVideo = async () => {
     if (!videoRef.current) return;
-    const stream = await loadDesktopCapture();
-    videoRef.current.srcObject = stream || null;
+    const desktopStream = await loadDesktopCapture();
+    const mediaStream = await getDevices();
+    setDesktopStream(desktopStream);
+    setMediaStream(mediaStream);
+    videoRef.current.srcObject = desktopStream || null;
   };
 
   useEffect(() => {
