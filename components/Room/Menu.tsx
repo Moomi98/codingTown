@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { colors } from "../../styles/variables";
 import { useRouter } from "next/router";
 import { paths } from "../../constants/paths";
-import { getDevices } from "../../utils/channel/channel";
+import { getDevices, getUserMedia } from "../../utils/channel/channel";
 import Setting from "../setting/Setting";
 
 const Container = styled.div`
@@ -47,7 +47,7 @@ const LeaveRoomButton = styled.button`
 
 const Menu = () => {
   const [isMicOn, setIsMicOn] = useState(true);
-  const [micStream, setMicStream] = useState<MediaDeviceInfo[] | null>(null);
+  const [micStream, setMicStream] = useState<MediaStream | null>(null);
   const [settingModal, setSettingModal] = useState(false);
   const router = useRouter();
   const iconSize = 30;
@@ -60,16 +60,16 @@ const Menu = () => {
   };
 
   const getMicStream = async () => {
-    setMicStream(await getDevices());
+    setMicStream(await getUserMedia());
   };
 
   const setMic = () => {
-    // const audioTracks = micStream!.getAudioTracks();
-    // console.log(audioTracks);
-    // setIsMicOn((state) => (state = !state));
-    // audioTracks.forEach(
-    //   (audioTrack) => (audioTrack.enabled = !audioTrack.enabled)
-    // );
+    const audioTracks = micStream!.getAudioTracks();
+    console.log(audioTracks);
+    setIsMicOn((state) => (state = !state));
+    audioTracks.forEach(
+      (audioTrack) => (audioTrack.enabled = !audioTrack.enabled)
+    );
   };
 
   useEffect(() => {
