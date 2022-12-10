@@ -15,7 +15,7 @@ const Container = styled.div`
   position: relative;
 `;
 
-const Channel = (): JSX.Element => {
+const Room = (): JSX.Element => {
   let socket: Socket;
   const initSocket = (): void => {
     socket = io(BASE_URL);
@@ -56,4 +56,4 @@ const Channel = (): JSX.Element => {
   );
 };
 
-export default Channel;
+export default Room;
