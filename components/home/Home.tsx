@@ -70,7 +70,7 @@ const StartButton = styled.button`
   left: 50%;
   transform: translate(-50%, -50%);
   border: none;
-  background-color: ${colors.main};
+  background-color: #d1a142;
   color: white;
   font-size: 20px;
   font-weight: 500;
@@ -81,7 +81,7 @@ const StartButton = styled.button`
   transition: all 0.2s;
 
   &:hover {
-    background-color: ${colors.mainHover};
+    background-color: #b88d38;
   }
 `;
 
