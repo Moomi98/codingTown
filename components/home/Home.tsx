@@ -2,6 +2,8 @@ import styled from "styled-components";
 import Image from "next/image";
 import { colors } from "../../styles/variables";
 import { ST } from "next/dist/shared/lib/utils";
+import Link from "next/link";
+import { paths } from "../../constants/paths";
 const Contaier = styled.div`
   width: 100%;
   height: 100%;
@@ -64,7 +66,7 @@ const Subtitle = styled.p`
   color: #e4e4e4;
 `;
 
-const StartButton = styled.button`
+const StartButton = styled(Link)`
   position: absolute;
   top: 35%;
   left: 50%;
@@ -100,7 +102,7 @@ const Home = () => {
         </ImageWrapper>
         <Title>Coding Town</Title>
         <Subtitle>우리가 만드는 코딩 세상</Subtitle>
-        <StartButton>시작하기</StartButton>
+        <StartButton href={paths.LOBBY}>시작하기</StartButton>
       </MainImageContainer>
       <GradientBackground />
     </Contaier>
