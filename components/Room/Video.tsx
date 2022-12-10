@@ -1,9 +1,5 @@
 import { useEffect, useRef } from "react";
-import {
-  loadDesktopCapture,
-  getDevices,
-  getUserMedia,
-} from "../../utils/channel/channel";
+import { loadDesktopCapture, getUserMedia } from "../../utils/channel/channel";
 import styled from "styled-components";
 import { useRecoilState } from "recoil";
 import { desktopStreamState, mediaStreamState } from "../../stores/stream";
