@@ -1,4 +1,8 @@
-import Room from "../../components/Room/Room";
+import dynamic from "next/dynamic";
+
+const Room = dynamic(() => import("../../components/Room/Room"), {
+  ssr: false,
+});
 
 const channel = () => {
   return (

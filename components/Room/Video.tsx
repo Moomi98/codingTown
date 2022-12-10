@@ -7,6 +7,8 @@ import {
 import styled from "styled-components";
 import { useRecoilState } from "recoil";
 import { desktopStreamState, mediaStreamState } from "../../stores/stream";
+import { whiteboardState } from "../../stores/whiteboard";
+import Whiteboard from "../whiteboard/Whiteboard";
 
 const Container = styled.div`
   width: 100%;
@@ -25,25 +27,43 @@ const VideoPlayer = styled.video`
 `;
 
 const Video = () => {
-  const [_, setDesktopStream] = useRecoilState(desktopStreamState);
+  const [desktopStream, setDesktopStream] = useRecoilState(desktopStreamState);
   const [__, setMediaStream] = useRecoilState(mediaStreamState);
+  const [whiteboard, setWhiteboard] = useRecoilState(whiteboardState);
   const videoRef = useRef<HTMLVideoElement>(null);
+
   const setDesktopVideo = async () => {
     if (!videoRef.current) return;
-    const desktopStream = await loadDesktopCapture();
+    const desktop = await loadDesktopCapture();
+    setDesktopStream(desktop);
+    videoRef.current.srcObject = desktop || null;
+  };
+
+  const setMedia = async () => {
     const mediaStream = await getUserMedia();
-    setDesktopStream(desktopStream);
+
     setMediaStream(mediaStream);
-    videoRef.current.srcObject = desktopStream || null;
   };
 
   useEffect(() => {
     setDesktopVideo();
+    setMedia();
   }, []);
+
+  useEffect(() => {
+    if (!videoRef.current) return;
+
+    if (whiteboard) return;
+    videoRef.current.srcObject = desktopStream;
+  }, [whiteboard]);
 
   return (
     <Container>
-      <VideoPlayer ref={videoRef} autoPlay></VideoPlayer>
+      {whiteboard ? (
+        <Whiteboard />
+      ) : (
+        <VideoPlayer ref={videoRef} autoPlay></VideoPlayer>
+      )}
     </Container>
   );
 };

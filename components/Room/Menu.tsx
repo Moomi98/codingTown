@@ -10,6 +10,8 @@ import { useRouter } from "next/router";
 import { paths } from "../../constants/paths";
 import { getDevices, getUserMedia } from "../../utils/channel/channel";
 import Setting from "../setting/Setting";
+import { useRecoilState } from "recoil";
+import { whiteboardState } from "../../stores/whiteboard";
 
 const Container = styled.div`
   position: relative;
@@ -49,6 +51,7 @@ const Menu = () => {
   const [isMicOn, setIsMicOn] = useState(true);
   const [micStream, setMicStream] = useState<MediaStream | null>(null);
   const [settingModal, setSettingModal] = useState(false);
+  const [whiteboard, setWhiteboard] = useRecoilState(whiteboardState);
   const router = useRouter();
   const iconSize = 30;
   const routeLobby = () => {
@@ -70,6 +73,10 @@ const Menu = () => {
     audioTracks.forEach(
       (audioTrack) => (audioTrack.enabled = !audioTrack.enabled)
     );
+  };
+
+  const showWhiteBoard = () => {
+    setWhiteboard(whiteboard ? false : true);
   };
 
   useEffect(() => {
@@ -98,11 +105,22 @@ const Menu = () => {
           />
         )}
       </MenuContainer>
+      {whiteboard ? (
+        <IconTextButton
+          icon={
+            <FaChalkboardTeacher size={iconSize} color={colors.lightGreen} />
+          }
+          content={videoMenu.WHITE_BOARD}
+          click={showWhiteBoard}
+        />
+      ) : (
+        <IconTextButton
+          icon={<FaChalkboardTeacher size={iconSize} color="white" />}
+          content={videoMenu.WHITE_BOARD}
+          click={showWhiteBoard}
+        />
+      )}
 
-      <IconTextButton
-        icon={<FaChalkboardTeacher size={iconSize} color="white" />}
-        content={videoMenu.WHITE_BOARD}
-      />
       <LeaveRoomButton onClick={routeLobby}>
         {videoMenu.LEAVE_ROOM}
       </LeaveRoomButton>
