@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { BiUser } from "react-icons/bi";
 
 const Container = styled.section`
-  width: 24%;
+  width: 23.5%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

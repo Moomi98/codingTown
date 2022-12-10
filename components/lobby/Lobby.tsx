@@ -11,7 +11,7 @@ const Container = styled.div`
   justify-content: flex-start;
   align-items: center;
   align-content: flex-start;
-  gap: 30px;
+  gap: 2%;
   top: 70px;
   padding-top: 30px;
 `;
