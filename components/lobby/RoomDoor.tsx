@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { BiUser } from "react-icons/bi";
+import Tag from "../common/Tag";
 
 const Container = styled.section`
   width: 23.5%;
@@ -20,6 +21,7 @@ const Container = styled.section`
 `;
 
 const Title = styled.p`
+  width: 100%;
   font-size: 24px;
   font-weight: bold;
   margin: 0;
@@ -32,6 +34,22 @@ const InfoLayout = styled.div`
   flex-direction: column;
   gap: 15px;
   align-items: center;
+`;
+
+const TitleLayout = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: flex-start;
+`;
+
+const TagContainer = styled.div`
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-start;
 `;
 
 const UserLayout = styled.div`
@@ -54,7 +72,14 @@ interface roomdoorProps {
 const RoomDoor = (props: roomdoorProps) => {
   return (
     <Container>
-      <Title>{props.title}</Title>
+      <TitleLayout>
+        <Title>{props.title}</Title>
+        <TagContainer>
+          <Tag content={"java"} />
+          <Tag content={"javadddddd"} />
+          <Tag content={"java"} />
+        </TagContainer>
+      </TitleLayout>
       <InfoLayout>
         <UserLayout>
           <BiUser size={30} color="#aaa" />
