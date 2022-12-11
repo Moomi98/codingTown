@@ -14,3 +14,8 @@ export const codeState = atom<string>({
   key: "whiteboard_code",
   default: "",
 });
+
+export const themeState = atom<string>({
+  key: "whiteboard_theme",
+  default: "monokai",
+});

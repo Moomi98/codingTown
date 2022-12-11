@@ -4,7 +4,8 @@ interface mappingType {
 
 interface whiteboardType {
   languages: Array<string>;
-  mapping: mappingType;
+  language_mapping: mappingType;
+  themes: Array<string>;
 }
 
 export const whiteboard: whiteboardType = {
@@ -22,7 +23,7 @@ export const whiteboard: whiteboardType = {
     "Python",
     "Swift",
   ],
-  mapping: {
+  language_mapping: {
     "C/C++": "c_cpp",
     "C#": "csharp",
     CSS: "css",
@@ -36,4 +37,5 @@ export const whiteboard: whiteboardType = {
     Python: "python",
     Swift: "swift",
   },
+  themes: ["monokai", "github", "twilight", "xcode", "terminal"],
 };

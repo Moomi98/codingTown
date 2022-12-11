@@ -1,7 +1,7 @@
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { whiteboard } from "../../constants/whiteboard";
-import { languageState } from "../../stores/whiteboard";
+import { languageState, themeState } from "../../stores/whiteboard";
 
 const Container = styled.aside`
   position: absolute;
@@ -30,18 +30,32 @@ const Select = styled.select`
 
 const Menu = () => {
   const [language, setLanguage] = useRecoilState(languageState);
-  const changeLanguage = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const [theme, setTheme] = useRecoilState(themeState);
+  const changeLanguage = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedLanguage = e.target.selectedOptions[0].value;
     console.log(selectedLanguage);
     setLanguage(selectedLanguage);
+  };
+
+  const changeTheme = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedTheme = e.target.selectedOptions[0].value;
+    setTheme(selectedTheme);
   };
   return (
     <Container>
       <MenuTypes>언어</MenuTypes>
       <Select onChange={changeLanguage}>
         {whiteboard.languages.map((language: string) => (
-          <option key={language} value={whiteboard.mapping[language]}>
+          <option key={language} value={whiteboard.language_mapping[language]}>
             {language}
+          </option>
+        ))}
+      </Select>
+      <MenuTypes>테마</MenuTypes>
+      <Select onChange={changeTheme}>
+        {whiteboard.themes.map((theme: string) => (
+          <option key={theme} value={theme}>
+            {theme}
           </option>
         ))}
       </Select>
