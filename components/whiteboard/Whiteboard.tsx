@@ -14,9 +14,10 @@ import "ace-builds/src-noconflict/mode-swift";
 import "ace-builds/src-noconflict/theme-monokai";
 import styled from "styled-components";
 import Menu from "./Menu";
-import { useRecoilValue } from "recoil";
-import { languageState } from "../../stores/whiteboard";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { codeState, languageState } from "../../stores/whiteboard";
 import "ace-builds/src-noconflict/ext-language_tools";
+import { useEffect } from "react";
 
 const Container = styled.div`
   position: relative;
@@ -32,6 +33,8 @@ const CodeEditor = styled(AceEditor)`
 
 const Whiteboard = () => {
   const selectedLanguage = useRecoilValue(languageState);
+  const [code, setCode] = useRecoilState(codeState);
+
   return (
     <Container>
       <CodeEditor
@@ -41,7 +44,9 @@ const Whiteboard = () => {
         width="100%"
         height="100%"
         fontSize={14}
+        value={code}
         editorProps={{ $blockScrolling: true }}
+        onChange={(value: string) => setCode(value)}
         setOptions={{
           useWorker: false,
           enableBasicAutocompletion: true,

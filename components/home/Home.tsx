@@ -1,7 +1,5 @@
 import styled from "styled-components";
 import Image from "next/image";
-import { colors } from "../../styles/variables";
-import { ST } from "next/dist/shared/lib/utils";
 import Link from "next/link";
 import { paths } from "../../constants/paths";
 const Contaier = styled.div`
