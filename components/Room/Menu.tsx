@@ -86,7 +86,7 @@ const Menu = () => {
     <Container>
       <MenuContainer>
         <IconTextButton
-          click={closeSettingModal}
+          click={() => setSettingModal(true)}
           icon={<AiFillSetting size={iconSize} color="white" />}
           content={videoMenu.SETTING}
         />
@@ -106,7 +106,7 @@ const Menu = () => {
         icon={
           <FaChalkboardTeacher
             size={iconSize}
-            color={isMicOn ? colors.lightGreen : "white"}
+            color={whiteboard ? colors.lightGreen : "white"}
           />
         }
         content={videoMenu.WHITE_BOARD}
