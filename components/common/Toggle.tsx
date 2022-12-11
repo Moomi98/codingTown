@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
 import { useState } from "react";
-import { mainColor } from "../../styles/variables";
+import { colors } from "../../styles/variables";
 
 interface toggleStyledProps {
   toggle: boolean;
@@ -15,7 +15,7 @@ const ToggleBtn = styled.button<toggleStyledProps>`
   border-radius: 30px;
   border: none;
   cursor: pointer;
-  background-color: ${(props) => (!props.toggle ? "none" : mainColor)};
+  background-color: ${(props) => (!props.toggle ? "none" : colors.main)};
   position: relative;
   display: flex;
   justify-content: center;

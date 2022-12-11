@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { desktopStreamState, mediaStreamState } from "../../stores/stream";
+import { mediaStreamState } from "../../stores/stream";
 import { getDevices, getUserMedia } from "../../utils/channel/channel";
 
 const Container = styled.div`

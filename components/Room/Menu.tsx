@@ -2,13 +2,13 @@ import styled from "styled-components";
 import IconTextButton from "../common/IconTextButton";
 import { AiFillSetting } from "react-icons/ai";
 import { FaChalkboardTeacher } from "react-icons/fa";
-import { BsFillMicFill, BsFillMicMuteFill } from "react-icons/bs";
+import { BsFillMicFill } from "react-icons/bs";
 import { videoMenu } from "../../constants/menus";
 import { useEffect, useState } from "react";
 import { colors } from "../../styles/variables";
 import { useRouter } from "next/router";
 import { paths } from "../../constants/paths";
-import { getDevices, getUserMedia } from "../../utils/channel/channel";
+import { getUserMedia } from "../../utils/channel/channel";
 import Setting from "../setting/Setting";
 import { useRecoilState } from "recoil";
 import { whiteboardState } from "../../stores/whiteboard";
@@ -68,7 +68,6 @@ const Menu = () => {
 
   const setMic = () => {
     const audioTracks = micStream!.getAudioTracks();
-    console.log(audioTracks);
     setIsMicOn((state) => (state = !state));
     audioTracks.forEach(
       (audioTrack) => (audioTrack.enabled = !audioTrack.enabled)
@@ -87,7 +86,7 @@ const Menu = () => {
     <Container>
       <MenuContainer>
         <IconTextButton
-          click={() => setSettingModal(true)}
+          click={closeSettingModal}
           icon={<AiFillSetting size={iconSize} color="white" />}
           content={videoMenu.SETTING}
         />
