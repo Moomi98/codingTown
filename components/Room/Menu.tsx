@@ -91,35 +91,28 @@ const Menu = () => {
           icon={<AiFillSetting size={iconSize} color="white" />}
           content={videoMenu.SETTING}
         />
-        {isMicOn ? (
-          <IconTextButton
-            icon={<BsFillMicFill size={iconSize} color={colors.lightGreen} />}
-            content={videoMenu.MIC_ON}
-            click={setMic}
-          />
-        ) : (
-          <IconTextButton
-            icon={<BsFillMicMuteFill size={iconSize} color="white" />}
-            content={videoMenu.MIC_OFF}
-            click={setMic}
-          />
-        )}
-      </MenuContainer>
-      {whiteboard ? (
+
         <IconTextButton
           icon={
-            <FaChalkboardTeacher size={iconSize} color={colors.lightGreen} />
+            <BsFillMicFill
+              size={iconSize}
+              color={isMicOn ? colors.lightGreen : "white"}
+            />
           }
-          content={videoMenu.WHITE_BOARD}
-          click={showWhiteBoard}
+          content={isMicOn ? videoMenu.MIC_ON : videoMenu.MIC_OFF}
+          click={setMic}
         />
-      ) : (
-        <IconTextButton
-          icon={<FaChalkboardTeacher size={iconSize} color="white" />}
-          content={videoMenu.WHITE_BOARD}
-          click={showWhiteBoard}
-        />
-      )}
+      </MenuContainer>
+      <IconTextButton
+        icon={
+          <FaChalkboardTeacher
+            size={iconSize}
+            color={isMicOn ? colors.lightGreen : "white"}
+          />
+        }
+        content={videoMenu.WHITE_BOARD}
+        click={showWhiteBoard}
+      />
 
       <LeaveRoomButton onClick={routeLobby}>
         {videoMenu.LEAVE_ROOM}
