@@ -1,5 +1,5 @@
 import styled, { css, keyframes } from "styled-components";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import TextField from "../common/TextField";
 import Toggle from "../common/Toggle";
 import { colors } from "../../styles/variables";
@@ -164,6 +164,7 @@ const Modal = (props: ModalProps) => {
     props.close()
   );
   const [privateRoom, setPrivateRoom] = useState(false);
+  const backgroundRef = useRef<HTMLDivElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const roomNameRef = useRef<HTMLInputElement>(null);
   const nickNameRef = useRef<HTMLInputElement>(null);
@@ -188,6 +189,10 @@ const Modal = (props: ModalProps) => {
       nickName,
       password,
     };
+  };
+
+  const closeModal = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (backgroundRef.current === e.target) setCloseAnimation(true);
   };
 
   const createRoom = () => {
@@ -220,7 +225,11 @@ const Modal = (props: ModalProps) => {
   };
 
   return (
-    <Container animation={closeAnimation}>
+    <Container
+      animation={closeAnimation}
+      onClick={closeModal}
+      ref={backgroundRef}
+    >
       <ProjectDetailLayout animation={closeAnimation}>
         <Title>방 생성</Title>
         <FormLayout>
