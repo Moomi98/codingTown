@@ -4,6 +4,7 @@ import { colors } from "../../styles/variables";
 import { useState } from "react";
 import Modal from "../modal/CreateRoomModal";
 import { useRouter } from "next/router";
+import SearchBar from "../common/Searchbar";
 
 const Container = styled.header`
   position: fixed;
@@ -71,6 +72,7 @@ const Header = (): JSX.Element => {
           <FaCode size={30} />
           <LogoName>Coding Town</LogoName>
         </LogoLayout>
+        <SearchBar />
         <CreateRoomButton onClick={() => setCreateRoomModal(true)}>
           방 생성
         </CreateRoomButton>
