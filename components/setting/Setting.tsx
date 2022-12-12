@@ -3,7 +3,7 @@ import useCloseAnimation from "../../hooks/useCloseAnimation";
 import useEscEvent from "../../hooks/useEscEvent";
 import { colors } from "../../styles/variables";
 import { BsFillMicFill, BsHeadphones } from "react-icons/bs";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import MicSetting from "./MicSetting";
 import SpeakerSetting from "./SpeakerSetting";
 
@@ -169,10 +169,19 @@ export const Setting = (props: SettingProps) => {
   const [closeAnimation, setCloseAnimation] = useCloseAnimation(() =>
     props.close()
   );
+  const backgroundRef = useRef<HTMLDivElement>(null);
+
+  const closeModal = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (backgroundRef.current === e.target) setCloseAnimation(true);
+  };
   const escEvent = useEscEvent(() => setCloseAnimation(true));
   const [currentSettingPage, setCurrentSettingPage] = useState<string>("mic");
   return (
-    <Background animation={closeAnimation}>
+    <Background
+      animation={closeAnimation}
+      ref={backgroundRef}
+      onClick={closeModal}
+    >
       <Container animation={closeAnimation}>
         <SettingMenuList>
           <SettingMenu onClick={() => setCurrentSettingPage("mic")}>
