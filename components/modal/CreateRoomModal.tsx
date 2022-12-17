@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import { paths } from "../../constants/paths";
 import useEscEvent from "../../hooks/useEscEvent";
 import useCloseAnimation from "../../hooks/useCloseAnimation";
+import { createRoomAPI } from "../../apis/http";
 
 interface animationProps {
   animation: boolean;
@@ -195,11 +196,12 @@ const Modal = (props: ModalProps) => {
     if (backgroundRef.current === e.target) setCloseAnimation(true);
   };
 
-  const createRoom = () => {
+  const createRoom = async () => {
     const roomData = getFormData();
     if (!roomData) return;
 
-    router.push(paths.ROOM + `/${roomData.roomName}`);
+    const result = await createRoomAPI(roomData);
+    router.push(paths.ROOM + `/${result.roomCode}`);
   };
 
   const setPassword = () => {
