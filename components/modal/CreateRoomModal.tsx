@@ -201,7 +201,11 @@ const Modal = (props: ModalProps) => {
     if (!roomData) return;
 
     const result = await createRoomAPI(roomData);
-    router.push(paths.ROOM + `/${result.roomCode}`);
+    localStorage.setItem("nickName", roomData.nickName);
+    localStorage.setItem("roomCode", result.roomCode);
+    router.push({
+      pathname: paths.ROOM + `/${result.roomCode}`,
+    });
   };
 
   const setPassword = () => {

@@ -1,10 +1,16 @@
 import styled from "styled-components";
 import Menu from "./Menu";
 import Video from "./Video";
-import { BASE_URL } from "../../constants/api";
+import { BASE_URL } from "../../apis/http";
 import { events } from "../../constants/events";
 import { io, Socket } from "socket.io-client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { WebRTC } from "../../utils/webRTC";
+
+interface roomProps {
+  nickName: string;
+  roomCode: string;
+}
 
 const Container = styled.div`
   width: 100%;
@@ -15,42 +21,41 @@ const Container = styled.div`
   position: relative;
 `;
 
-const Room = (): JSX.Element => {
+const Room = (props: roomProps): JSX.Element => {
+  const [currentUser, setCurrentUser] = useState(0);
+  let videoWidth = Math.floor(100 / currentUser);
   let socket: Socket;
-  const initSocket = (): void => {
+  let webRTC;
+
+  const init = (): void => {
     socket = io(BASE_URL);
+    webRTC = new WebRTC(socket, 11212);
     socket.on(events.CONNECT, () => {
       console.log("response");
-      console.log(socket);
     });
 
-    addSocketListener(events.CONNECT_ERROR, () => {
-      console.log("connect error");
+    socket.emit(events.MAKE_ROOM, {
+      nickName: props.nickName,
+      roomCode: props.roomCode,
     });
 
-    addSocketListener(events.DISCONNECT, () => {
-      console.log("disconnect");
+    socket.on(events.CONNECT_ERROR, (error: any) => {
+      console.log("connect error", error);
     });
-    addSocketListener(events.MAKE_ROOM, (response: any) => {
-      console.log(events);
+
+    socket.on(events.MAKE_ROOM, (response: any) => {
+      console.log(response);
+      setCurrentUser((prev) => prev + 1);
     });
-    addSocketListener;
-  };
-
-  const addSocketListener = (event: string, callback: Function): void => {
-    socket?.on(event, (payload) => callback(payload));
-  };
-
-  const emitSocket = (event: string, payload: object): void => {
-    socket?.emit(event, payload);
   };
 
   useEffect(() => {
-    initSocket();
+    init();
   }, []);
   return (
     <Container>
-      <Video />
+      <Video width={videoWidth} />
+
       <Menu />
     </Container>
   );
