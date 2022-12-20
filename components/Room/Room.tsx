@@ -6,12 +6,13 @@ import { events } from "../../constants/events";
 import { io, Socket } from "socket.io-client";
 import { useEffect, useState } from "react";
 import { WebRTC } from "../../utils/webRTC";
+import { getUserMedia, loadDesktopCapture } from "../../utils/channel/channel";
+import { offerType } from "../../utils/webRTC";
 
 interface roomProps {
   nickName: string;
-  roomCode: string;
+  roomCode: number;
 }
-
 const Container = styled.div`
   width: 100%;
   height: 100%;
@@ -24,12 +25,10 @@ const Container = styled.div`
 const Room = (props: roomProps): JSX.Element => {
   const [currentUser, setCurrentUser] = useState(0);
   let videoWidth = Math.floor(100 / currentUser);
-  let socket: Socket;
-  let webRTC;
+  let socket: Socket = io(BASE_URL);
+  let webRTC = new WebRTC(socket, 11212);
 
   const init = (): void => {
-    socket = io(BASE_URL);
-    webRTC = new WebRTC(socket, 11212);
     socket.on(events.CONNECT, () => {
       console.log("response");
     });
@@ -49,12 +48,37 @@ const Room = (props: roomProps): JSX.Element => {
     });
   };
 
+  const setJoinEvent = () => {
+    socket.on(events.JOIN, async (response: offerType) => {
+      console.log(response);
+
+      webRTC.makeConnection();
+      webRTC.addTracks([await getUserMedia(), await loadDesktopCapture()]);
+      webRTC.setLocalOffer();
+    });
+
+    socket.on(events.OFFER, async (response: offerType) => {
+      webRTC.setRemoteOffer({
+        type: events.OFFER as RTCSdpType,
+        sdp: response.sdp,
+      });
+    });
+
+    socket.on(events.ANSWER, (response: offerType) => {
+      webRTC.setAnswer({
+        type: events.OFFER as RTCSdpType,
+        sdp: response.sdp,
+      });
+    });
+  };
+
   useEffect(() => {
     init();
+    setJoinEvent();
   }, []);
   return (
     <Container>
-      <Video width={videoWidth} />
+      <Video />
 
       <Menu />
     </Container>

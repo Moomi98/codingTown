@@ -1,5 +1,8 @@
 export const events = {
-  MAKE_ROOM: "join",
+  MAKE_ROOM: "create",
+  JOIN: "join",
+  OFFER: "offer",
+  ANSWER: "answer",
   CONNECT: "connect",
   DISCONNECT: "disconnect",
   CONNECT_ERROR: "connect_error",

@@ -7,7 +7,6 @@ const Room = dynamic(() => import("../../components/Room/Room"), {
 
 const channel = () => {
   const router = useRouter();
-  console.log(router.query);
   let nickName: string = "";
 
   if (typeof window !== "undefined") {
@@ -18,7 +17,7 @@ const channel = () => {
 
   return (
     <div className="div">
-      <Room roomCode={roomCode} nickName={nickName} />
+      <Room roomCode={Number(roomCode)} nickName={nickName} />
     </div>
   );
 };
