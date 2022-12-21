@@ -1,5 +1,17 @@
+import { useEffect, useState } from "react";
 import styled from "styled-components";
+import { getRoomDoorsAPI } from "../../apis/http";
 import RoomDoor from "./RoomDoor";
+
+interface roomDoorInfo {
+  roomName: string;
+  roomCode: string;
+  tags: Array<string>;
+  isPrivate: boolean;
+  password: string;
+  currentUser: number;
+  totalUser: number;
+}
 
 const Container = styled.div`
   width: 90%;
@@ -17,24 +29,22 @@ const Container = styled.div`
 `;
 
 const Lobby = () => {
+  const [roomDoorInfos, setRoomDoorInfos] = useState<Array<roomDoorInfo>>([]);
+  const setRoomDoors = async () => {
+    const result = await getRoomDoorsAPI();
+    setRoomDoorInfos(result);
+    console.log(result);
+  };
+
+  useEffect(() => {
+    setRoomDoors();
+  }, []);
+
   return (
     <Container>
-      <RoomDoor title="Helloewqweqweqweqwweqwewqweqwe" />
-      <RoomDoor title="Hello" />
-      <RoomDoor title="Hello" />
-      <RoomDoor title="Hello" />
-      <RoomDoor title="Hello" />
-      <RoomDoor title="Hello" />
-      <RoomDoor title="Hello" />
-      <RoomDoor title="Hello" />
-      <RoomDoor title="Hello" />
-      <RoomDoor title="Hello" />
-      <RoomDoor title="Hello" />
-      <RoomDoor title="Hello" />
-      <RoomDoor title="Hello" />
-      <RoomDoor title="Hello" />
-      <RoomDoor title="Hello" />
-      <RoomDoor title="Hello" />
+      {roomDoorInfos.map((roomDoorInfo) => (
+        <RoomDoor roomInfo={roomDoorInfo} />
+      ))}
     </Container>
   );
 };

@@ -2,6 +2,20 @@ import styled from "styled-components";
 import { BiUser } from "react-icons/bi";
 import Tag from "../common/Tag";
 
+interface roomDoorInfo {
+  roomName: string;
+  roomCode: string;
+  tags: Array<string>;
+  isPrivate: boolean;
+  password: string;
+  currentUser: number;
+  totalUser: number;
+}
+
+interface roomDoorProps {
+  roomInfo: roomDoorInfo;
+}
+
 const Container = styled.section`
   width: 23.5%;
   display: flex;
@@ -65,25 +79,23 @@ const GrayText = styled.p`
   color: #aaa;
 `;
 
-interface roomdoorProps {
-  title: string;
-}
-
-const RoomDoor = (props: roomdoorProps) => {
+const RoomDoor = ({ roomInfo }: roomDoorProps) => {
   return (
     <Container>
       <TitleLayout>
-        <Title>{props.title}</Title>
+        <Title>{roomInfo.roomName}</Title>
         <TagContainer>
-          <Tag content={"java"} />
-          <Tag content={"javadddddd"} />
-          <Tag content={"java"} />
+          {roomInfo.tags.map((tag) => (
+            <Tag content={tag} />
+          ))}
         </TagContainer>
       </TitleLayout>
       <InfoLayout>
         <UserLayout>
           <BiUser size={30} color="#aaa" />
-          <GrayText>20/20</GrayText>
+          <GrayText>
+            {roomInfo.currentUser}/{roomInfo.totalUser}
+          </GrayText>
         </UserLayout>
       </InfoLayout>
     </Container>

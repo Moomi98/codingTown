@@ -13,6 +13,11 @@ interface roomProps {
   nickName: string;
   roomCode: number;
 }
+
+interface joinType {
+  nickName: string;
+}
+
 const Container = styled.div`
   width: 100%;
   height: 100%;
@@ -38,6 +43,11 @@ const Room = (props: roomProps): JSX.Element => {
       roomCode: props.roomCode,
     });
 
+    socket.emit(events.JOIN, {
+      nickName: props.nickName,
+      roomCode: props.roomCode,
+    });
+
     socket.on(events.CONNECT_ERROR, (error: any) => {
       console.log("connect error", error);
     });
@@ -49,7 +59,7 @@ const Room = (props: roomProps): JSX.Element => {
   };
 
   const setJoinEvent = () => {
-    socket.on(events.JOIN, async (response: offerType) => {
+    socket.on(events.JOIN, async (response: joinType) => {
       console.log(response);
 
       webRTC.makeConnection();
