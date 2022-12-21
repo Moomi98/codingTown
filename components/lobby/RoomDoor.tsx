@@ -85,8 +85,8 @@ const RoomDoor = ({ roomInfo }: roomDoorProps) => {
       <TitleLayout>
         <Title>{roomInfo.roomName}</Title>
         <TagContainer>
-          {roomInfo.tags.map((tag) => (
-            <Tag content={tag} />
+          {roomInfo.tags.map((tag, index) => (
+            <Tag key={index} content={tag} />
           ))}
         </TagContainer>
       </TitleLayout>

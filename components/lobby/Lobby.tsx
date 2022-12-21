@@ -32,7 +32,8 @@ const Lobby = () => {
   const [roomDoorInfos, setRoomDoorInfos] = useState<Array<roomDoorInfo>>([]);
   const setRoomDoors = async () => {
     const result = await getRoomDoorsAPI();
-    setRoomDoorInfos(result);
+
+    setRoomDoorInfos(result.rooms);
     console.log(result);
   };
 
@@ -43,7 +44,7 @@ const Lobby = () => {
   return (
     <Container>
       {roomDoorInfos.map((roomDoorInfo) => (
-        <RoomDoor roomInfo={roomDoorInfo} />
+        <RoomDoor key={roomDoorInfo.roomCode} roomInfo={roomDoorInfo} />
       ))}
     </Container>
   );
