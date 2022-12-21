@@ -11,6 +11,7 @@ interface createRoomPayload {
   roomName: string;
   nickName: string;
   password: string;
+  tags: Array<string>;
 }
 
 export const getRoomDoorsAPI = async () => {

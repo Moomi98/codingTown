@@ -1,5 +1,5 @@
 import styled, { css, keyframes } from "styled-components";
-import React, { useEffect, useRef, useState } from "react";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import TextField from "../common/TextField";
 import Toggle from "../common/Toggle";
 import { colors } from "../../styles/variables";
@@ -8,6 +8,7 @@ import { paths } from "../../constants/paths";
 import useEscEvent from "../../hooks/useEscEvent";
 import useCloseAnimation from "../../hooks/useCloseAnimation";
 import { createRoomAPI } from "../../apis/http";
+import Tag from "../common/Tag";
 
 interface animationProps {
   animation: boolean;
@@ -78,7 +79,7 @@ const Container = styled.div<animationProps>`
 
 const ProjectDetailLayout = styled.div<animationProps>`
   width: 50%;
-  height: 50%;
+  height: 60%;
   padding: 30px;
   display: flex;
   flex-direction: column;
@@ -160,6 +161,14 @@ const CreateRoomButton = styled.button`
   }
 `;
 
+const TagContainer = styled.div`
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-start;
+`;
+
 const Modal = (props: ModalProps) => {
   const [closeAnimation, setCloseAnimation] = useCloseAnimation(() =>
     props.close()
@@ -169,6 +178,7 @@ const Modal = (props: ModalProps) => {
   const passwordRef = useRef<HTMLInputElement>(null);
   const roomNameRef = useRef<HTMLInputElement>(null);
   const nickNameRef = useRef<HTMLInputElement>(null);
+  const [tags, setTags] = useState<Array<string>>([]);
   const createButtonRef = useRef<HTMLButtonElement>(null);
   const router = useRouter();
   const [createButton, setCreateButton] = useState(true);
@@ -189,6 +199,7 @@ const Modal = (props: ModalProps) => {
       roomName,
       nickName,
       password,
+      tags,
     };
   };
 
@@ -230,6 +241,17 @@ const Modal = (props: ModalProps) => {
     }
   };
 
+  const addTag = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    if (value.length === 0) {
+      setTags([]);
+      return;
+    }
+    const inputTags = value.split("#").slice(1);
+    setTags([...inputTags]);
+  };
+
   return (
     <Container
       animation={closeAnimation}
@@ -254,6 +276,15 @@ const Modal = (props: ModalProps) => {
               <TextField ref={passwordRef} disabled={!privateRoom} />
             </FlexLayout>
           </InputTypeLayout>
+          <InputTypeLayout>
+            <InputType>태그</InputType>
+            <TextField ref={nickNameRef} change={addTag} />
+          </InputTypeLayout>
+          <TagContainer>
+            {tags.map((tag, index) => (
+              <Tag key={index} content={tag} />
+            ))}
+          </TagContainer>
         </FormLayout>
         <CreateRoomButton
           ref={createButtonRef}
