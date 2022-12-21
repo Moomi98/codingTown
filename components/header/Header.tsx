@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { FaCode } from "react-icons/fa";
 import { colors } from "../../styles/variables";
 import { useState } from "react";
-import Modal from "../modal/CreateRoomModal";
+import CreateRoomModal from "../modal/CreateRoomModal";
 import { useRouter } from "next/router";
 import SearchBar from "../common/Searchbar";
 
@@ -77,7 +77,9 @@ const Header = (): JSX.Element => {
           방 생성
         </CreateRoomButton>
       </HeaderLayout>
-      {createRoomModal && <Modal close={() => setCreateRoomModal(false)} />}
+      {createRoomModal && (
+        <CreateRoomModal close={() => setCreateRoomModal(false)} />
+      )}
     </Container>
   );
 };

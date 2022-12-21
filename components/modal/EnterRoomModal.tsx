@@ -1,21 +1,30 @@
 import styled, { css, keyframes } from "styled-components";
-import React, { ChangeEvent, useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import TextField from "../common/TextField";
-import Toggle from "../common/Toggle";
 import { colors } from "../../styles/variables";
 import { useRouter } from "next/router";
 import { paths } from "../../constants/paths";
 import useEscEvent from "../../hooks/useEscEvent";
 import useCloseAnimation from "../../hooks/useCloseAnimation";
-import { createRoomAPI } from "../../apis/http";
-import Tag from "../common/Tag";
+import { enterRoomAPI } from "../../apis/http";
 
 interface animationProps {
   animation: boolean;
 }
 
+interface roomInfoProps {
+  roomName: string;
+  roomCode: string;
+  tags: Array<string>;
+  isPrivate: boolean;
+  password: string;
+  currentUser: number;
+  totalUser: number;
+}
+
 interface ModalProps {
   close: Function;
+  roomInfo: roomInfoProps;
 }
 
 const fadeIn = keyframes`
@@ -79,7 +88,7 @@ const Container = styled.div<animationProps>`
 
 const ProjectDetailLayout = styled.div<animationProps>`
   width: 50%;
-  height: 60%;
+  height: 40%;
   padding: 30px;
   display: flex;
   flex-direction: column;
@@ -141,6 +150,7 @@ const FlexLayout = styled.div`
 `;
 
 const CreateRoomButton = styled.button`
+  width: 100%;
   border: none;
   background-color: ${colors.main};
   color: white;
@@ -161,45 +171,49 @@ const CreateRoomButton = styled.button`
   }
 `;
 
-const TagContainer = styled.div`
+const ButtonLayout = styled.div`
   width: 100%;
   display: flex;
-  gap: 10px;
+  flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
+  gap: 10px;
 `;
 
-const CreateRoomModal = (props: ModalProps) => {
+const ErrorMsg = styled.p`
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: red;
+  text-align: center;
+`;
+
+const EnterRoomModal = (props: ModalProps) => {
   const [closeAnimation, setCloseAnimation] = useCloseAnimation(() =>
     props.close()
   );
-  const [privateRoom, setPrivateRoom] = useState(false);
   const backgroundRef = useRef<HTMLDivElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
-  const roomNameRef = useRef<HTMLInputElement>(null);
   const nickNameRef = useRef<HTMLInputElement>(null);
-  const [tags, setTags] = useState<Array<string>>([]);
-  const createButtonRef = useRef<HTMLButtonElement>(null);
+  const enterButtonRef = useRef<HTMLButtonElement>(null);
   const router = useRouter();
   const [createButton, setCreateButton] = useState(true);
+  const [errorMessage, setErrorMessage] =
+    useState<string>("접속할 수 없습니다.");
   const escEvent = useEscEvent(() => setCloseAnimation(true));
 
   const getFormData = () => {
-    if (!roomNameRef.current) return false;
     if (!passwordRef.current) return false;
     if (!nickNameRef.current) return false;
-    const roomName = roomNameRef.current.value;
     const nickName = nickNameRef.current.value;
     let password = "";
-    if (privateRoom) {
+    if (props.roomInfo.isPrivate) {
       password = passwordRef.current.value;
     }
 
     return {
-      roomName,
       nickName,
       password,
-      tags,
     };
   };
 
@@ -207,49 +221,26 @@ const CreateRoomModal = (props: ModalProps) => {
     if (backgroundRef.current === e.target) setCloseAnimation(true);
   };
 
-  const createRoom = async () => {
+  const enterRoom = async () => {
     const roomData = getFormData();
     if (!roomData) return;
 
-    const result = await createRoomAPI(roomData);
-    localStorage.setItem("nickName", roomData.nickName);
-    localStorage.setItem("roomCode", result.roomCode);
-    router.push({
-      pathname: paths.ROOM + `/${result.roomCode}`,
-    });
-  };
-
-  const setPassword = () => {
-    if (privateRoom) {
-      setPrivateRoom(false);
-      if (passwordRef.current) {
-        passwordRef.current.value = "";
-      }
-    } else {
-      setPrivateRoom(true);
+    const result = await enterRoomAPI(roomData);
+    if (result.isSuccess) {
+      localStorage.setItem("nickName", roomData.nickName);
+      localStorage.setItem("roomCode", result.roomCode);
+      router.push({
+        pathname: paths.ROOM + `/${result.roomCode}`,
+      });
     }
   };
 
-  const canCreateRoom = () => {
-    if (
-      roomNameRef.current?.value.length === 0 ||
-      nickNameRef.current?.value.length === 0
-    ) {
+  const canEnterRoom = () => {
+    if (nickNameRef.current?.value.length === 0) {
       setCreateButton(true);
     } else {
       setCreateButton(false);
     }
-  };
-
-  const addTag = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-
-    if (value.length === 0) {
-      setTags([]);
-      return;
-    }
-    const inputTags = value.split("#").slice(1);
-    setTags([...inputTags]);
   };
 
   return (
@@ -259,43 +250,34 @@ const CreateRoomModal = (props: ModalProps) => {
       ref={backgroundRef}
     >
       <ProjectDetailLayout animation={closeAnimation}>
-        <Title>방 생성</Title>
+        <Title>방 참가</Title>
         <FormLayout>
           <InputTypeLayout>
-            <InputType>방 제목</InputType>
-            <TextField ref={roomNameRef} change={canCreateRoom} />
-          </InputTypeLayout>
-          <InputTypeLayout>
             <InputType>닉네임</InputType>
-            <TextField ref={nickNameRef} change={canCreateRoom} />
+            <TextField ref={nickNameRef} change={canEnterRoom} />
           </InputTypeLayout>
-          <InputTypeLayout>
-            <InputType>비밀번호</InputType>
-            <FlexLayout>
-              <Toggle click={setPassword} />
-              <TextField ref={passwordRef} disabled={!privateRoom} />
-            </FlexLayout>
-          </InputTypeLayout>
-          <InputTypeLayout>
-            <InputType>태그</InputType>
-            <TextField ref={nickNameRef} change={addTag} />
-          </InputTypeLayout>
-          <TagContainer>
-            {tags.map((tag, index) => (
-              <Tag key={index} content={tag} />
-            ))}
-          </TagContainer>
+          {props.roomInfo.isPrivate && (
+            <InputTypeLayout>
+              <InputType>비밀번호</InputType>
+              <FlexLayout>
+                <TextField ref={passwordRef} type="password" />
+              </FlexLayout>
+            </InputTypeLayout>
+          )}
         </FormLayout>
-        <CreateRoomButton
-          ref={createButtonRef}
-          onClick={createRoom}
-          disabled={createButton}
-        >
-          생성하기
-        </CreateRoomButton>
+        <ButtonLayout>
+          {errorMessage.length > 0 && <ErrorMsg>{errorMessage}</ErrorMsg>}
+          <CreateRoomButton
+            ref={enterButtonRef}
+            onClick={enterRoom}
+            disabled={createButton}
+          >
+            참가하기
+          </CreateRoomButton>
+        </ButtonLayout>
       </ProjectDetailLayout>
     </Container>
   );
 };
 
-export default CreateRoomModal;
+export default EnterRoomModal;

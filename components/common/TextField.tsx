@@ -5,6 +5,7 @@ import { colors } from "../../styles/variables";
 interface textFieldProps {
   disabled?: boolean;
   ref?: React.RefObject<HTMLInputElement>;
+  type?: string;
   change?: ChangeEventHandler;
 }
 
@@ -27,7 +28,12 @@ const Container = styled.input`
 
 const TextField = forwardRef<HTMLInputElement, textFieldProps>((props, ref) => {
   return (
-    <Container ref={ref} disabled={props.disabled} onChange={props.change} />
+    <Container
+      ref={ref}
+      disabled={props.disabled}
+      onChange={props.change}
+      type={props.type}
+    />
   );
 });
 

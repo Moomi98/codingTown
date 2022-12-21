@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import { BiUser } from "react-icons/bi";
 import Tag from "../common/Tag";
+import { MouseEventHandler, useState } from "react";
+import EnterRoomModal from "../modal/EnterRoomModal";
 
 interface roomDoorInfo {
   roomName: string;
@@ -14,6 +16,7 @@ interface roomDoorInfo {
 
 interface roomDoorProps {
   roomInfo: roomDoorInfo;
+  onClick?: MouseEventHandler<HTMLDivElement>;
 }
 
 const Container = styled.section`
@@ -79,13 +82,15 @@ const GrayText = styled.p`
   color: #aaa;
 `;
 
-const RoomDoor = ({ roomInfo }: roomDoorProps) => {
+const RoomDoor = (props: roomDoorProps) => {
+  const [enterRoom, setEnterRoom] = useState<boolean>(false);
+
   return (
-    <Container>
+    <Container onClick={() => setEnterRoom(true)}>
       <TitleLayout>
-        <Title>{roomInfo.roomName}</Title>
+        <Title>{props.roomInfo.roomName}</Title>
         <TagContainer>
-          {roomInfo.tags.map((tag, index) => (
+          {props.roomInfo.tags.map((tag, index) => (
             <Tag key={index} content={tag} />
           ))}
         </TagContainer>
@@ -94,10 +99,16 @@ const RoomDoor = ({ roomInfo }: roomDoorProps) => {
         <UserLayout>
           <BiUser size={30} color="#aaa" />
           <GrayText>
-            {roomInfo.currentUser}/{roomInfo.totalUser}
+            {props.roomInfo.currentUser}/{props.roomInfo.totalUser}
           </GrayText>
         </UserLayout>
       </InfoLayout>
+      {enterRoom && (
+        <EnterRoomModal
+          close={() => setEnterRoom(false)}
+          roomInfo={props.roomInfo}
+        />
+      )}
     </Container>
   );
 };
