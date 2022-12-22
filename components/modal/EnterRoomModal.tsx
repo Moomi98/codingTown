@@ -203,12 +203,14 @@ const EnterRoomModal = (props: ModalProps) => {
   const escEvent = useEscEvent(() => setCloseAnimation(true));
 
   const getFormData = () => {
-    if (!passwordRef.current) return false;
-    if (!nickNameRef.current) return false;
-    const nickName = nickNameRef.current.value;
+    const nickName = nickNameRef.current!.value;
+
     let password = "";
-    if (props.roomInfo.isPrivate) {
-      password = passwordRef.current.value;
+
+    if (passwordRef.current) {
+      if (props.roomInfo.isPrivate) {
+        password = passwordRef.current.value;
+      }
     }
 
     return {
@@ -223,7 +225,7 @@ const EnterRoomModal = (props: ModalProps) => {
 
   const enterRoom = async () => {
     const roomData = getFormData();
-    if (!roomData) return;
+    console.log("enter room");
 
     const result = await enterRoomAPI(roomData);
     if (result.isSuccess) {
