@@ -10,8 +10,10 @@ import { useRouter } from "next/router";
 import { paths } from "../../constants/paths";
 import { getUserMedia } from "../../utils/channel/channel";
 import Setting from "../setting/Setting";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { whiteboardState } from "../../stores/whiteboard";
+import { socketState } from "../../stores/socket";
+import { events } from "../../constants/events";
 
 const Container = styled.div`
   position: relative;
@@ -53,8 +55,10 @@ const Menu = () => {
   const [settingModal, setSettingModal] = useState(false);
   const [whiteboard, setWhiteboard] = useRecoilState(whiteboardState);
   const router = useRouter();
+  const socket = useRecoilValue(socketState);
   const iconSize = 30;
   const routeLobby = () => {
+    socket?.emit(events.BYE);
     router.push(paths.LOBBY);
   };
 
