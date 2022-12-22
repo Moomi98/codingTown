@@ -5,7 +5,7 @@ const Room = dynamic(() => import("../../components/Room/Room"), {
   ssr: false,
 });
 
-const channel = () => {
+const RoomPage = () => {
   const router = useRouter();
   let nickName: string = "";
 
@@ -15,7 +15,6 @@ const channel = () => {
 
   const roomCode = router.query.id as string;
   const enterType = router.query.enterType as string;
-  console.log(enterType);
 
   return (
     <div className="div">
@@ -28,4 +27,4 @@ const channel = () => {
   );
 };
 
-export default channel;
+export default RoomPage;

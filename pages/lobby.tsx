@@ -1,6 +1,6 @@
 import Header from "../components/header/Header";
 import Lobby from "../components/lobby/Lobby";
-const lobby = (): JSX.Element => {
+const LobbyPage = (): JSX.Element => {
   return (
     <div className="div">
       <Header />
@@ -9,4 +9,4 @@ const lobby = (): JSX.Element => {
   );
 };
 
-export default lobby;
+export default LobbyPage;
