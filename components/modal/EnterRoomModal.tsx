@@ -198,8 +198,7 @@ const EnterRoomModal = (props: ModalProps) => {
   const enterButtonRef = useRef<HTMLButtonElement>(null);
   const router = useRouter();
   const [createButton, setCreateButton] = useState(true);
-  const [errorMessage, setErrorMessage] =
-    useState<string>("접속할 수 없습니다.");
+  const [errorMessage, setErrorMessage] = useState<string>("");
   const escEvent = useEscEvent(() => setCloseAnimation(true));
 
   const getFormData = () => {

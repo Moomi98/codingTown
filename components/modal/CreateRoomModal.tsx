@@ -1,5 +1,5 @@
 import styled, { css, keyframes } from "styled-components";
-import React, { ChangeEvent, useEffect, useRef, useState } from "react";
+import React, { ChangeEvent, useRef, useState } from "react";
 import TextField from "../common/TextField";
 import Toggle from "../common/Toggle";
 import { colors } from "../../styles/variables";
@@ -248,8 +248,7 @@ const CreateRoomModal = (props: ModalProps) => {
       setTags([]);
       return;
     }
-    const inputTags = value.split("#").slice(1);
-    setTags([...inputTags]);
+    setTags([...value.split("#").slice(1)]);
   };
 
   return (
@@ -278,7 +277,7 @@ const CreateRoomModal = (props: ModalProps) => {
           </InputTypeLayout>
           <InputTypeLayout>
             <InputType>태그</InputType>
-            <TextField ref={nickNameRef} change={addTag} />
+            <TextField change={addTag} />
           </InputTypeLayout>
           <TagContainer>
             {tags.map((tag, index) => (
