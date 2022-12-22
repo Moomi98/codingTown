@@ -2,6 +2,7 @@ export const events = {
   MAKE_ROOM: "create",
   JOIN: "join",
   OFFER: "offer",
+  BYE: "bye",
   ANSWER: "answer",
   CONNECT: "connect",
   DISCONNECT: "disconnect",

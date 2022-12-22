@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import { WebRTC } from "../../utils/webRTC";
 import { getUserMedia, loadDesktopCapture } from "../../utils/channel/channel";
 import { offerType } from "../../utils/webRTC";
+import { useRecoilState } from "recoil";
+import { socketState } from "../../stores/socket";
 
 interface roomProps {
   nickName: string;
@@ -30,11 +32,14 @@ const Container = styled.div`
 
 const Room = (props: roomProps): JSX.Element => {
   const [currentUser, setCurrentUser] = useState(0);
+  const [roomSocket, setRoomSocket] = useRecoilState(socketState);
   let videoWidth = Math.floor(100 / currentUser);
   let socket: Socket = io(BASE_URL);
   let webRTC = new WebRTC(socket, 11212);
 
   const init = (): void => {
+    setRoomSocket(socket);
+
     socket.on(events.CONNECT, () => {
       console.log("response");
     });
