@@ -7,6 +7,7 @@ import { paths } from "../../constants/paths";
 import useEscEvent from "../../hooks/useEscEvent";
 import useCloseAnimation from "../../hooks/useCloseAnimation";
 import { enterRoomAPI } from "../../apis/http";
+import { events } from "../../constants/events";
 
 interface animationProps {
   animation: boolean;
@@ -230,6 +231,7 @@ const EnterRoomModal = (props: ModalProps) => {
       localStorage.setItem("roomCode", result.roomCode);
       router.push({
         pathname: paths.ROOM + `/${result.roomCode}`,
+        query: { enterType: events.JOIN },
       });
     }
   };

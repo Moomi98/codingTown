@@ -9,6 +9,7 @@ import useEscEvent from "../../hooks/useEscEvent";
 import useCloseAnimation from "../../hooks/useCloseAnimation";
 import { createRoomAPI } from "../../apis/http";
 import Tag from "../common/Tag";
+import { events } from "../../constants/events";
 
 interface animationProps {
   animation: boolean;
@@ -216,6 +217,7 @@ const CreateRoomModal = (props: ModalProps) => {
     localStorage.setItem("roomCode", result.roomCode);
     router.push({
       pathname: paths.ROOM + `/${result.roomCode}`,
+      query: { enterType: events.MAKE_ROOM },
     });
   };
 

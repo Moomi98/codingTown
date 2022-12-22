@@ -12,6 +12,7 @@ import { offerType } from "../../utils/webRTC";
 interface roomProps {
   nickName: string;
   roomCode: number;
+  enterType: string;
 }
 
 interface joinType {
@@ -43,16 +44,11 @@ const Room = (props: roomProps): JSX.Element => {
       roomCode: props.roomCode,
     });
 
-    socket.emit(events.JOIN, {
-      nickName: props.nickName,
-      roomCode: props.roomCode,
-    });
-
     socket.on(events.CONNECT_ERROR, (error: any) => {
       console.log("connect error", error);
     });
 
-    socket.on(events.MAKE_ROOM, (response: any) => {
+    socket.on(props.enterType, (response: any) => {
       console.log(response);
       setCurrentUser((prev) => prev + 1);
     });

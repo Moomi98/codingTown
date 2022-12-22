@@ -14,10 +14,16 @@ const channel = () => {
   }
 
   const roomCode = router.query.id as string;
+  const enterType = router.query.enterType as string;
+  console.log(enterType);
 
   return (
     <div className="div">
-      <Room roomCode={Number(roomCode)} nickName={nickName} />
+      <Room
+        roomCode={Number(roomCode)}
+        nickName={nickName}
+        enterType={enterType}
+      />
     </div>
   );
 };
