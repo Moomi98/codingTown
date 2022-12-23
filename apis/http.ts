@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const BASE_URL = "http://20.249.2.255";
+export const BASE_URL = "http://3.37.124.61";
 
 const urls = {
   roomDoors: "/lobby/",
