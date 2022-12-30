@@ -7,13 +7,14 @@ export const loadDesktopCapture = async (): Promise<MediaStream> => {
 
     return stream;
   } catch (e: any) {
-    throw new Error(e);
+    return e;
   }
 };
 
 export const getDevices = async (): Promise<MediaDeviceInfo[]> => {
   try {
     const stream = await navigator.mediaDevices.enumerateDevices();
+    console.log(stream);
 
     return stream;
   } catch (error: any) {
