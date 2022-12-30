@@ -35,6 +35,18 @@ const Container = styled.section`
   &:hover {
     box-shadow: rgb(4 17 29 / 25%) 0px 0px 8px 0px;
   }
+
+  @media screen and (max-width: 1280px) {
+    width: 32%;
+  }
+
+  @media screen and (max-width: 720px) {
+    width: 49%;
+  }
+
+  @media screen and (max-width: 480px) {
+    width: 100%;
+  }
 `;
 
 const Title = styled.p`
