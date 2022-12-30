@@ -5,6 +5,7 @@ import { useState } from "react";
 import CreateRoomModal from "../modal/CreateRoomModal";
 import { useRouter } from "next/router";
 import SearchBar from "../common/Searchbar";
+import { MdMeetingRoom } from "react-icons/md";
 
 const Container = styled.header`
   position: fixed;
@@ -22,6 +23,8 @@ const HeaderLayout = styled.div`
   width: 90%;
   height: 100%;
   margin: 0 auto;
+  @media screen and (max-width: "600px") {
+  }
 `;
 
 const LogoLayout = styled.div`
@@ -38,9 +41,12 @@ const LogoName = styled.p`
   display: flex;
   gap: 10px;
   align-items: center;
+  @media screen and (max-width: 600px) {
+    display: none;
+  }
 `;
 
-const CreateRoomButton = styled.button`
+const CreateRoomButtonWithText = styled.button`
   border: none;
   background-color: ${colors.main};
   color: white;
@@ -54,6 +60,28 @@ const CreateRoomButton = styled.button`
 
   &:hover {
     background-color: ${colors.mainHover};
+  }
+  @media screen and (max-width: 600px) {
+    display: none;
+  }
+`;
+
+const CreateRoomButtonWithIcon = styled(MdMeetingRoom)`
+  width: 15%;
+  border: none;
+  background-color: ${colors.main};
+  color: white;
+  border-radius: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 7px;
+
+  &:hover {
+    background-color: ${colors.mainHover};
+  }
+  @media screen and (min-width: 600px) {
+    display: none;
   }
 `;
 
@@ -73,9 +101,13 @@ const Header = (): JSX.Element => {
           <LogoName>Coding Town</LogoName>
         </LogoLayout>
         <SearchBar />
-        <CreateRoomButton onClick={() => setCreateRoomModal(true)}>
+        <CreateRoomButtonWithText onClick={() => setCreateRoomModal(true)}>
           방 생성
-        </CreateRoomButton>
+        </CreateRoomButtonWithText>
+        <CreateRoomButtonWithIcon
+          size={45}
+          onClick={() => setCreateRoomModal(true)}
+        />
       </HeaderLayout>
       {createRoomModal && (
         <CreateRoomModal close={() => setCreateRoomModal(false)} />

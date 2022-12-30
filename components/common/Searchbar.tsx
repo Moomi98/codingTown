@@ -15,6 +15,9 @@ const Container = styled.div`
   border: 1px solid rgb(229, 232, 235);
   border-radius: 10px;
   padding: 5px 5px 5px 16px;
+  @media screen and (max-width: 600px) {
+    min-width: 60%;
+  }
 `;
 
 const Search = styled.input`
