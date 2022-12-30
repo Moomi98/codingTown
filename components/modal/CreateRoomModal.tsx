@@ -80,7 +80,7 @@ const Container = styled.div<animationProps>`
 
 const ProjectDetailLayout = styled.div<animationProps>`
   width: 50%;
-  height: 60%;
+  height: 70%;
   padding: 30px;
   display: flex;
   flex-direction: column;
@@ -99,14 +99,19 @@ const ProjectDetailLayout = styled.div<animationProps>`
         ? scaleBack
         : scaleUp} 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards
     `};
+
+  @media screen and (max-width: 960px) {
+    width: 80%;
+    height: 95%;
+  }
 `;
 
 const FormLayout = styled.form`
   width: 100%;
   height: 100%;
-  display: "flex";
+  display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 20px;
 `;
 
 const Title = styled.h2`
@@ -128,6 +133,7 @@ const InputTypeLayout = styled.div`
 `;
 
 const InputType = styled.p`
+  margin: 0;
   width: 160px;
   font-size: 20px;
   font-weight: 600;
