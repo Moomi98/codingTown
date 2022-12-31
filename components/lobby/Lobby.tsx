@@ -28,16 +28,6 @@ const Container = styled.div`
   padding-top: 30px;
 `;
 
-const testData = {
-  roomName: "test11",
-  roomCode: "001011",
-  tags: ["javascript", "java", "python"],
-  isPrivate: true,
-  password: "",
-  currentUser: 1,
-  totalUser: 10,
-};
-
 const Lobby = () => {
   const [roomDoorInfos, setRoomDoorInfos] = useState<Array<roomDoorInfo>>([]);
   const setRoomDoors = async () => {
@@ -53,17 +43,9 @@ const Lobby = () => {
 
   return (
     <Container>
-      {/* {roomDoorInfos.map((roomDoorInfo) => (
+      {roomDoorInfos.map((roomDoorInfo) => (
         <RoomDoor key={roomDoorInfo.roomCode} roomInfo={roomDoorInfo} />
-      ))} */}
-      <RoomDoor roomInfo={testData} />
-      <RoomDoor roomInfo={testData} />
-      <RoomDoor roomInfo={testData} />
-      <RoomDoor roomInfo={testData} />
-      <RoomDoor roomInfo={testData} />
-      <RoomDoor roomInfo={testData} />
-      <RoomDoor roomInfo={testData} />
-      <RoomDoor roomInfo={testData} />
+      ))}
     </Container>
   );
 };

@@ -108,6 +108,11 @@ const ProjectDetailLayout = styled.div<animationProps>`
         ? scaleBack
         : scaleUp} 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards
     `};
+
+  @media screen and (max-width: 960px) {
+    width: 80%;
+    height: 80%;
+  }
 `;
 
 const FormLayout = styled.form`
