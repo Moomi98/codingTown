@@ -3,6 +3,8 @@ import { BiUser } from "react-icons/bi";
 import Tag from "../common/Tag";
 import { MouseEventHandler, useState } from "react";
 import EnterRoomModal from "../modal/EnterRoomModal";
+import { AiFillLock } from "react-icons/ai";
+import { colors } from "../../styles/variables";
 
 interface roomDoorInfo {
   roomName: string;
@@ -85,7 +87,7 @@ const UserLayout = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  gap: 15px;
+  gap: 10px;
   width: 100%;
 `;
 
@@ -109,6 +111,9 @@ const RoomDoor = (props: roomDoorProps) => {
       </TitleLayout>
       <InfoLayout>
         <UserLayout>
+          {props.roomInfo.isPrivate && (
+            <AiFillLock size={25} color={colors.mainHover} />
+          )}
           <BiUser size={30} color="#aaa" />
           <GrayText>
             {props.roomInfo.currentUser}/{props.roomInfo.totalUser}

@@ -4,8 +4,8 @@ export const BASE_URL = "http://3.37.124.61";
 
 const urls = {
   roomDoors: "/lobby/",
-  create: "/room/",
-  join: "/join/",
+  create: "/room/create/",
+  join: "/room/join/",
 };
 
 interface createRoomPayload {
