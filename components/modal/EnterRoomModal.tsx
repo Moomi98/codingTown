@@ -89,7 +89,7 @@ const Container = styled.div<animationProps>`
 
 const ProjectDetailLayout = styled.div<animationProps>`
   width: 50%;
-  height: 40%;
+  height: 60%;
   padding: 30px;
   display: flex;
   flex-direction: column;

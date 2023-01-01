@@ -44,31 +44,34 @@ const ImageWrapper = styled.div`
   left: 0;
 `;
 
-const Title = styled.p`
+const TitleContainer = styled.div`
   position: absolute;
-  top: 15%;
+  top: 30%;
   left: 50%;
   transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Title = styled.p`
+  margin: 0;
+  text-align: center;
   font-size: 60px;
   font-weight: bold;
   color: white;
 `;
 
 const Subtitle = styled.p`
-  position: absolute;
-  top: 26%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  margin: 0;
   font-size: 18px;
   font-weight: 500;
   color: #e4e4e4;
 `;
 
 const StartButton = styled(Link)`
-  position: absolute;
-  top: 35%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   border: none;
   background-color: #d1a142;
   color: white;
@@ -98,9 +101,11 @@ const Home = () => {
             height={100}
           />
         </ImageWrapper>
-        <Title>Coding Town</Title>
-        <Subtitle>우리가 만드는 코딩 세상</Subtitle>
-        <StartButton href={paths.LOBBY}>시작하기</StartButton>
+        <TitleContainer>
+          <Title>Coding Town</Title>
+          <Subtitle>우리가 만드는 코딩 세상</Subtitle>
+          <StartButton href={paths.LOBBY}>시작하기</StartButton>
+        </TitleContainer>
       </MainImageContainer>
       <GradientBackground />
     </Contaier>
