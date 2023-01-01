@@ -18,6 +18,8 @@ interface createRoomPayload {
 interface enterRoomPayload {
   nickName: string;
   password: string;
+  roomName: string;
+  roomCode: string;
 }
 
 export const getRoomDoorsAPI = async () => {
@@ -44,6 +46,6 @@ export const enterRoomAPI = async (payload: enterRoomPayload) => {
     const response = await axios.post(BASE_URL + urls.join, payload);
     return response.data;
   } catch (e: any) {
-    throw new Error(e);
+    return false;
   }
 };
