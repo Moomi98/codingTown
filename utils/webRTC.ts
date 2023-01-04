@@ -1,8 +1,10 @@
 import { Socket } from "socket.io-client";
+import { events } from "../constants/events";
 
 export interface offerType {
   sdp: string;
   roomCode: number;
+  sid: string;
 }
 
 export class WebRTC {
@@ -15,38 +17,72 @@ export class WebRTC {
     this.roomCode = roomCode;
   }
 
-  makeConnection() {
-    this.peerConnection.addEventListener("icecandidate", (data) => {
-      this.socket.emit("icecandidate", data.candidate, this.roomCode);
-    });
-    this.socket.on("icecandidate", (candidate) => {
-      this.peerConnection.addIceCandidate(candidate);
-    });
-  }
+  // makeConnection() {
+  //   this.peerConnection.addEventListener("icecandidate", (data) => {
+  //     this.socket.emit("icecandidate", {
+  //       candidate: data.candidate,
+  //       roomCode: this.roomCode,
+  //     });
+  //   });
+  //   this.socket.on("icecandidate", (candidate) => {
+  //     console.log(candidate);
+
+  //     this.peerConnection.addIceCandidate(candidate);
+  //   });
+  // }
 
   addTracks(streams: MediaStream[]) {
     streams.forEach((stream) => {
-      console.log(stream.getTracks());
       stream
         .getTracks()
         .forEach((track) => this.peerConnection.addTrack(track, stream));
     });
   }
 
-  async setLocalOffer() {
+  async setLocalOffer(sid: string) {
     const offer = await this.peerConnection.createOffer();
     this.peerConnection.setLocalDescription(offer);
-    this.socket.emit("offer", { sdp: offer.sdp, roomCode: this.roomCode });
+    this.socket.emit(events.OFFER, {
+      sdp: offer.sdp,
+      roomCode: this.roomCode,
+      sid,
+    });
   }
 
-  async setRemoteOffer(offer: RTCSessionDescriptionInit) {
+  async setRemoteOffer(offer: RTCSessionDescriptionInit, sid: string) {
     this.peerConnection.setRemoteDescription(offer);
     const answer = await this.peerConnection.createAnswer();
     this.peerConnection.setLocalDescription(answer);
-    this.socket.emit("answer", { sdp: answer.sdp, roomCode: this.roomCode });
+    this.socket.emit(events.ANSWER, {
+      sdp: answer.sdp,
+      roomCode: this.roomCode,
+      sid,
+    });
   }
 
   async setAnswer(answer: RTCSessionDescriptionInit) {
     this.peerConnection.setRemoteDescription(answer);
+  }
+
+  setIceCandidate(sid: string) {
+    this.peerConnection.addEventListener("icecandidate", (data) => {
+      this.socket.emit("icecandidate", {
+        candidate: data.candidate,
+        sid,
+        roomCode: this.roomCode,
+      });
+    });
+    this.socket.on(events.ICE_CANDIDATE, (candidate: RTCIceCandidateInit) => {
+      console.log("iceCandidate", candidate);
+      this.peerConnection.addIceCandidate(candidate);
+    });
+  }
+
+  setRemoteStream(remoteVideo: HTMLVideoElement) {
+    this.peerConnection.addEventListener("track", (data) => {
+      console.log("track", data);
+
+      remoteVideo.srcObject = data.streams[0];
+    });
   }
 }

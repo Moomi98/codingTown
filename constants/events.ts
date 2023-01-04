@@ -7,4 +7,6 @@ export const events = {
   CONNECT: "connect",
   DISCONNECT: "disconnect",
   CONNECT_ERROR: "connect_error",
+  ICE_CANDIDATE: "icecandidate",
+  NOT_INVALID_PASSWORD: "비밀번호가 일치하지 않습니다",
 };

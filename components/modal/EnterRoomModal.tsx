@@ -230,9 +230,12 @@ const EnterRoomModal = (props: ModalProps) => {
 
   const enterRoom = async () => {
     const roomData = getFormData();
-    console.log("enter room");
+    const result = await enterRoomAPI({
+      ...roomData,
+      roomCode: props.roomInfo.roomCode,
+      roomName: props.roomInfo.roomName,
+    });
 
-    const result = await enterRoomAPI(roomData);
     if (result.isSuccess) {
       localStorage.setItem("nickName", roomData.nickName);
       localStorage.setItem("roomCode", result.roomCode);
@@ -240,12 +243,15 @@ const EnterRoomModal = (props: ModalProps) => {
         pathname: paths.ROOM + `/${result.roomCode}`,
         query: { enterType: events.JOIN },
       });
+    } else {
+      setErrorMessage(events.NOT_INVALID_PASSWORD);
     }
   };
 
   const canEnterRoom = () => {
     if (nickNameRef.current?.value.length === 0) {
       setCreateButton(true);
+      setErrorMessage("");
     } else {
       setCreateButton(false);
     }

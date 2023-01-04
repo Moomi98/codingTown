@@ -31,7 +31,7 @@ const Container = styled.div`
 const Room = (props: roomProps): JSX.Element => {
   const [currentUser, setCurrentUser] = useState(0);
   let socket: Socket = io(BASE_URL);
-  let webRTC = new WebRTC(socket, 11212);
+  let webRTC = new WebRTC(socket, props.roomCode);
 
   const init = (): void => {
     socket.on(events.CONNECT, () => {
@@ -40,40 +40,44 @@ const Room = (props: roomProps): JSX.Element => {
 
     socket.emit(props.enterType, {
       nickName: props.nickName,
-      roomCode: props.roomCode,
+      roomCode: String(props.roomCode),
     });
 
     socket.on(events.CONNECT_ERROR, (error: any) => {
       console.log("connect error", error);
     });
 
-    socket.on(events.DISCONNECT, () => {
-      console.log("disconnect");
-    });
-
-    socket.on(props.enterType, (response: any) => {
-      console.log(response);
-      setCurrentUser((prev) => prev + 1);
+    socket.on(events.DISCONNECT, (reason: any) => {
+      console.log("disconnect", reason);
     });
   };
 
   const setJoinEvent = () => {
-    socket.on(events.JOIN, async (response: joinType) => {
-      console.log(response);
-
-      webRTC.makeConnection();
+    socket.on("*", (data) => {
+      console.log(data);
+    });
+    socket.on(events.JOIN, async (response: any) => {
       webRTC.addTracks([await getUserMedia(), await loadDesktopCapture()]);
-      webRTC.setLocalOffer();
+      webRTC.setLocalOffer(response.sid);
+
+      webRTC.setIceCandidate(response.sid);
     });
 
     socket.on(events.OFFER, async (response: offerType) => {
-      webRTC.setRemoteOffer({
-        type: events.OFFER as RTCSdpType,
-        sdp: response.sdp,
-      });
+      console.log(response);
+
+      webRTC.setRemoteOffer(
+        {
+          type: events.OFFER as RTCSdpType,
+          sdp: response.sdp,
+        },
+        response.sid
+      );
     });
 
-    socket.on(events.ANSWER, (response: offerType) => {
+    socket.on(events.ANSWER, (response: any) => {
+      console.log(response);
+
       webRTC.setAnswer({
         type: events.OFFER as RTCSdpType,
         sdp: response.sdp,
