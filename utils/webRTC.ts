@@ -17,20 +17,6 @@ export class WebRTC {
     this.roomCode = roomCode;
   }
 
-  // makeConnection() {
-  //   this.peerConnection.addEventListener("icecandidate", (data) => {
-  //     this.socket.emit("icecandidate", {
-  //       candidate: data.candidate,
-  //       roomCode: this.roomCode,
-  //     });
-  //   });
-  //   this.socket.on("icecandidate", (candidate) => {
-  //     console.log(candidate);
-
-  //     this.peerConnection.addIceCandidate(candidate);
-  //   });
-  // }
-
   addTracks(streams: MediaStream[]) {
     streams.forEach((stream) => {
       stream
@@ -42,6 +28,7 @@ export class WebRTC {
   async setLocalOffer(sid: string) {
     const offer = await this.peerConnection.createOffer();
     this.peerConnection.setLocalDescription(offer);
+
     this.socket.emit(events.OFFER, {
       sdp: offer.sdp,
       roomCode: this.roomCode,
@@ -52,6 +39,7 @@ export class WebRTC {
   async setRemoteOffer(offer: RTCSessionDescriptionInit, sid: string) {
     this.peerConnection.setRemoteDescription(offer);
     const answer = await this.peerConnection.createAnswer();
+
     this.peerConnection.setLocalDescription(answer);
     this.socket.emit(events.ANSWER, {
       sdp: answer.sdp,
@@ -68,21 +56,23 @@ export class WebRTC {
     this.peerConnection.addEventListener("icecandidate", (data) => {
       this.socket.emit("icecandidate", {
         candidate: data.candidate,
-        sid,
+        sid: sid,
         roomCode: this.roomCode,
       });
     });
-    this.socket.on(events.ICE_CANDIDATE, (candidate: RTCIceCandidateInit) => {
-      console.log("iceCandidate", candidate);
-      this.peerConnection.addIceCandidate(candidate);
+    this.socket.on(events.ICE_CANDIDATE, (response) => {
+      if (response.candidate) {
+        this.peerConnection.addIceCandidate(response.candidate);
+      }
     });
   }
 
-  setRemoteStream(remoteVideo: HTMLVideoElement) {
-    this.peerConnection.addEventListener("track", (data) => {
-      console.log("track", data);
-
-      remoteVideo.srcObject = data.streams[0];
+  setRemoteStream(remoteVideo: HTMLVideoElement | null) {
+    this.peerConnection.addEventListener("track", async (data) => {
+      if (data.track.kind === "video") {
+        if (!remoteVideo) return;
+        remoteVideo.srcObject = data.streams[0];
+      }
     });
   }
 }

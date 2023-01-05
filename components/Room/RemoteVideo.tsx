@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { forwardRef, useEffect, useRef } from "react";
 import styled from "styled-components";
 
 interface RemoteVideoProps {
@@ -21,19 +21,17 @@ const VideoPlayer = styled.video`
   object-fit: fill;
 `;
 
-const Video = (props: RemoteVideoProps) => {
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    if (!videoRef.current) return;
-    videoRef.current.srcObject = props.video;
-  }, [props.video]);
+const RemoteVideo = forwardRef<HTMLVideoElement>((props, ref) => {
+  // useEffect(() => {
+  //   if (!videoRef.current) return;
+  //   videoRef.current.srcObject = props.video;
+  // }, [props.video]);
 
   return (
     <Container>
-      <VideoPlayer ref={videoRef} autoPlay></VideoPlayer>
+      <VideoPlayer ref={ref} autoPlay playsInline></VideoPlayer>
     </Container>
   );
-};
+});
 
-export default Video;
+export default RemoteVideo;

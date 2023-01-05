@@ -4,19 +4,16 @@ import Video from "./Video";
 import { BASE_URL } from "../../apis/http";
 import { events } from "../../constants/events";
 import { io, Socket } from "socket.io-client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { WebRTC } from "../../utils/webRTC";
 import { getUserMedia, loadDesktopCapture } from "../../utils/channel/channel";
 import { offerType } from "../../utils/webRTC";
+import RemoteVideo from "./RemoteVideo";
 
 interface roomProps {
   nickName: string;
   roomCode: number;
   enterType: string;
-}
-
-interface joinType {
-  nickName: string;
 }
 
 const Container = styled.div`
@@ -29,20 +26,17 @@ const Container = styled.div`
 `;
 
 const Room = (props: roomProps): JSX.Element => {
-  const [currentUser, setCurrentUser] = useState(0);
+  const [currentUser, setCurrentUser] = useState(1);
+  const remoteVideoRefs = useRef<HTMLVideoElement>(null);
   let socket: Socket = io(BASE_URL);
   let webRTC = new WebRTC(socket, props.roomCode);
 
-  const init = (): void => {
-    socket.on(events.CONNECT, () => {
+  const init = async () => {
+    webRTC.addTracks([await getUserMedia(), await loadDesktopCapture()]);
+
+    socket.on(events.CONNECT, async () => {
       console.log("response");
     });
-
-    socket.emit(props.enterType, {
-      nickName: props.nickName,
-      roomCode: String(props.roomCode),
-    });
-
     socket.on(events.CONNECT_ERROR, (error: any) => {
       console.log("connect error", error);
     });
@@ -50,22 +44,31 @@ const Room = (props: roomProps): JSX.Element => {
     socket.on(events.DISCONNECT, (reason: any) => {
       console.log("disconnect", reason);
     });
+
+    socket.emit(props.enterType, {
+      nickName: props.nickName,
+      roomCode: String(props.roomCode),
+    });
   };
 
-  const setJoinEvent = () => {
-    socket.on("*", (data) => {
-      console.log(data);
-    });
-    socket.on(events.JOIN, async (response: any) => {
-      webRTC.addTracks([await getUserMedia(), await loadDesktopCapture()]);
-      webRTC.setLocalOffer(response.sid);
+  const setJoinEvent = async () => {
+    webRTC.setRemoteStream(remoteVideoRefs.current);
 
+    socket.on(events.HAND_SHAKE, async (response) => {
       webRTC.setIceCandidate(response.sid);
     });
 
-    socket.on(events.OFFER, async (response: offerType) => {
-      console.log(response);
+    socket.on(events.JOIN, async (response: any) => {
+      socket.emit(events.HAND_SHAKE, {
+        sid: response.sid,
+        roomCode: props.roomCode,
+      });
+      webRTC.setIceCandidate(response.sid);
 
+      webRTC.setLocalOffer(response.sid);
+    });
+
+    socket.on(events.OFFER, (response: offerType) => {
       webRTC.setRemoteOffer(
         {
           type: events.OFFER as RTCSdpType,
@@ -76,10 +79,8 @@ const Room = (props: roomProps): JSX.Element => {
     });
 
     socket.on(events.ANSWER, (response: any) => {
-      console.log(response);
-
       webRTC.setAnswer({
-        type: events.OFFER as RTCSdpType,
+        type: events.ANSWER as RTCSdpType,
         sdp: response.sdp,
       });
     });
@@ -91,8 +92,8 @@ const Room = (props: roomProps): JSX.Element => {
   }, []);
   return (
     <Container>
-      <Video />
-
+      {/* <Video /> */}
+      <RemoteVideo ref={remoteVideoRefs} />
       <Menu />
     </Container>
   );

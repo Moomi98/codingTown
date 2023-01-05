@@ -4,6 +4,7 @@ export const events = {
   OFFER: "offer",
   BYE: "bye",
   ANSWER: "answer",
+  HAND_SHAKE: "handshake",
   CONNECT: "connect",
   DISCONNECT: "disconnect",
   CONNECT_ERROR: "connect_error",
