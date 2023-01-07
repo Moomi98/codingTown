@@ -1,10 +1,13 @@
 import { useEffect, useRef } from "react";
-import { loadDesktopCapture, getUserMedia } from "../../utils/channel/channel";
 import styled from "styled-components";
 import { useRecoilState } from "recoil";
-import { desktopStreamState, mediaStreamState } from "../../stores/stream";
 import { whiteboardState } from "../../stores/whiteboard";
 import Whiteboard from "../whiteboard/Whiteboard";
+
+interface videoProps {
+  desktopStream: MediaStream;
+  mediaStream: MediaStream;
+}
 
 const Container = styled.div`
   width: 100%;
@@ -22,37 +25,16 @@ const VideoPlayer = styled.video`
   object-fit: fill;
 `;
 
-const Video = () => {
-  const [desktopStream, setDesktopStream] = useRecoilState(desktopStreamState);
-  const [__, setMediaStream] = useRecoilState(mediaStreamState);
+const Video = (props: videoProps) => {
   const [whiteboard, setWhiteboard] = useRecoilState(whiteboardState);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const setDesktopVideo = async () => {
-    if (!videoRef.current) return;
-    const desktop = await loadDesktopCapture();
-    setDesktopStream(desktop);
-    videoRef.current.srcObject = desktop || null;
-  };
-
-  const setMedia = async () => {
-    const mediaStream = await getUserMedia();
-
-    setMediaStream(mediaStream);
-  };
-
-  useEffect(() => {
-    setDesktopVideo();
-    setMedia();
-  }, []);
-
   useEffect(() => {
     if (!videoRef.current) return;
-
     if (whiteboard) return;
-    videoRef.current.srcObject = desktopStream;
-  }, [whiteboard]);
 
+    videoRef.current.srcObject = props.desktopStream;
+  }, [props.desktopStream, whiteboard]);
   return (
     <Container>
       {whiteboard ? (

@@ -18,6 +18,8 @@ export class WebRTC {
   }
 
   addTracks(streams: MediaStream[]) {
+    console.log(streams);
+
     streams.forEach((stream) => {
       stream
         .getTracks()

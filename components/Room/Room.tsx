@@ -28,11 +28,14 @@ const Container = styled.div`
 const Room = (props: roomProps): JSX.Element => {
   const [currentUser, setCurrentUser] = useState(1);
   const remoteVideoRefs = useRef<HTMLVideoElement>(null);
+  let [desktopStream, setDesktopStream] = useState<MediaStream>();
+  let [userMediaStream, setUserMediaStream] = useState<MediaStream>();
+  const [hasStream, setHasStream] = useState<boolean>(false);
   let socket: Socket = io(BASE_URL);
   let webRTC = new WebRTC(socket, props.roomCode);
 
   const init = async () => {
-    webRTC.addTracks([await getUserMedia(), await loadDesktopCapture()]);
+    webRTC.addTracks([desktopStream!, userMediaStream!]);
 
     socket.on(events.CONNECT, async () => {
       console.log("response");
@@ -86,13 +89,27 @@ const Room = (props: roomProps): JSX.Element => {
     });
   };
 
+  const setStreams = async () => {
+    setDesktopStream(await loadDesktopCapture());
+    setUserMediaStream(await getUserMedia());
+  };
+
   useEffect(() => {
-    init();
-    setJoinEvent();
+    (async () => {
+      await setStreams();
+      setHasStream(true);
+    })();
   }, []);
+
+  useEffect(() => {
+    if (hasStream) {
+      init();
+      setJoinEvent();
+    }
+  }, [hasStream]);
   return (
     <Container>
-      {/* <Video /> */}
+      <Video desktopStream={desktopStream!} mediaStream={userMediaStream!} />
       <RemoteVideo ref={remoteVideoRefs} />
       <Menu />
     </Container>
