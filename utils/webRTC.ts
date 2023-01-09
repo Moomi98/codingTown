@@ -71,8 +71,12 @@ export class WebRTC {
 
   setRemoteStream(remoteVideo: HTMLVideoElement | null) {
     this.peerConnection.addEventListener("track", async (data) => {
+      console.log(data);
+
       if (data.track.kind === "video") {
         if (!remoteVideo) return;
+        console.log(data.streams[0]);
+
         remoteVideo.srcObject = data.streams[0];
       }
     });

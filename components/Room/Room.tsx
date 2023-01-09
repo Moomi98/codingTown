@@ -25,73 +25,105 @@ const Container = styled.div`
   position: relative;
 `;
 
+const VideoWrapper = styled.div`
+  width: 100%;
+  height: 92%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #222;
+`;
+
 const Room = (props: roomProps): JSX.Element => {
-  const [currentUser, setCurrentUser] = useState(1);
+  // const currentUser = useRef<number>(1);
+  // const videoWidth = useRef<number>(100);
+  const [currentUser, setCurrentUser] = useState<number>(1);
+  const [videoWidth, setVideoWidth] = useState<number>(100);
   const remoteVideoRefs = useRef<HTMLVideoElement>(null);
-  let [desktopStream, setDesktopStream] = useState<MediaStream>();
-  let [userMediaStream, setUserMediaStream] = useState<MediaStream>();
+  // let [desktopStream, setDesktopStream] = useState<MediaStream>();
+  // let [userMediaStream, setUserMediaStream] = useState<MediaStream>();
+  const desktopStream = useRef<MediaStream>();
+  const userMediaStream = useRef<MediaStream>();
   const [hasStream, setHasStream] = useState<boolean>(false);
-  let socket: Socket = io(BASE_URL);
-  let webRTC = new WebRTC(socket, props.roomCode);
+  const socket = useRef<Socket>();
+  const webRTC = useRef<WebRTC>();
 
   const init = async () => {
-    webRTC.addTracks([desktopStream!, userMediaStream!]);
+    socket.current = io(BASE_URL);
+    webRTC.current = new WebRTC(socket.current, props.roomCode);
+    webRTC.current.addTracks([
+      desktopStream.current!,
+      userMediaStream.current!,
+    ]);
 
-    socket.on(events.CONNECT, async () => {
+    socket.current.on(events.CONNECT, async () => {
       console.log("response");
     });
-    socket.on(events.CONNECT_ERROR, (error: any) => {
+    socket.current.on(events.CONNECT_ERROR, (error: any) => {
       console.log("connect error", error);
     });
 
-    socket.on(events.DISCONNECT, (reason: any) => {
+    socket.current.on(events.DISCONNECT, (reason: any) => {
       console.log("disconnect", reason);
     });
 
-    socket.emit(props.enterType, {
+    socket.current.emit(props.enterType, {
       nickName: props.nickName,
       roomCode: String(props.roomCode),
     });
   };
 
   const setJoinEvent = async () => {
-    webRTC.setRemoteStream(remoteVideoRefs.current);
+    webRTC.current?.setRemoteStream(remoteVideoRefs.current);
 
-    socket.on(events.HAND_SHAKE, async (response) => {
-      webRTC.setIceCandidate(response.sid);
+    socket.current?.on(events.HAND_SHAKE, async (response) => {
+      webRTC.current?.setIceCandidate(response.sid);
     });
 
-    socket.on(events.JOIN, async (response: any) => {
-      socket.emit(events.HAND_SHAKE, {
+    socket.current?.on(events.JOIN, async (response: any) => {
+      socket.current?.emit(events.HAND_SHAKE, {
         sid: response.sid,
         roomCode: props.roomCode,
       });
-      webRTC.setIceCandidate(response.sid);
+      webRTC.current?.setIceCandidate(response.sid);
 
-      webRTC.setLocalOffer(response.sid);
+      webRTC.current?.setLocalOffer(response.sid);
     });
 
-    socket.on(events.OFFER, (response: offerType) => {
-      webRTC.setRemoteOffer(
+    socket.current?.on(events.OFFER, (response: offerType) => {
+      webRTC.current?.setRemoteOffer(
         {
           type: events.OFFER as RTCSdpType,
           sdp: response.sdp,
         },
         response.sid
       );
+      // currentUser.current += 1;
+      // videoWidth.current = 100 / Math.ceil(Math.sqrt(currentUser.current));
+      setCurrentUser((state) => state + 1);
+      setVideoWidth(100 / Math.ceil(Math.sqrt(currentUser + 1)) - 1);
     });
 
-    socket.on(events.ANSWER, (response: any) => {
-      webRTC.setAnswer({
+    socket.current?.on(events.ANSWER, (response: any) => {
+      console.log("answer");
+
+      webRTC.current?.setAnswer({
         type: events.ANSWER as RTCSdpType,
         sdp: response.sdp,
       });
+      // currentUser.current += 1;
+      // videoWidth.current = 100 / Math.ceil(Math.sqrt(currentUser.current));
+      setCurrentUser((state) => state + 1);
+      setVideoWidth(100 / Math.ceil(Math.sqrt(currentUser + 1)) - 1);
     });
   };
 
   const setStreams = async () => {
-    setDesktopStream(await loadDesktopCapture());
-    setUserMediaStream(await getUserMedia());
+    // setDesktopStream(await loadDesktopCapture());
+    // setUserMediaStream(await getUserMedia());
+    desktopStream.current = await loadDesktopCapture();
+    userMediaStream.current = await getUserMedia();
   };
 
   useEffect(() => {
@@ -107,10 +139,18 @@ const Room = (props: roomProps): JSX.Element => {
       setJoinEvent();
     }
   }, [hasStream]);
+
   return (
     <Container>
-      <Video desktopStream={desktopStream!} mediaStream={userMediaStream!} />
-      <RemoteVideo ref={remoteVideoRefs} />
+      <VideoWrapper>
+        <Video
+          desktopStream={desktopStream.current!}
+          mediaStream={userMediaStream.current!}
+          width={videoWidth}
+        />
+        <RemoteVideo ref={remoteVideoRefs} width={videoWidth} />
+      </VideoWrapper>
+
       <Menu />
     </Container>
   );
